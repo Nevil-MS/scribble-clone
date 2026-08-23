@@ -1,0 +1,7 @@
+# python
+/backend/.venv/
+__pycache__/
+*.pyc
+
+# javascript
+/node_modules/

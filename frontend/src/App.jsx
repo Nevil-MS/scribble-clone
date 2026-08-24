@@ -1,8 +1,8 @@
-import LandingPage from "./pages/LandingPage.jsx";
+import LobbyPage from "./pages/LobbyPage.jsx";
 
 function App() {
 
-    return <LandingPage />
+    return <LobbyPage />
 }
 
 export default App

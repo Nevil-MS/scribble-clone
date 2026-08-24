@@ -1,0 +1,17 @@
+.chat {
+    background-color: #d9d9d9;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 4px;
+    flex: 1;    
+}
+
+.chat-message {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: flex-end;
+    gap: 2px;
+    padding: 4px;
+}

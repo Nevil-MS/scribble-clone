@@ -1,0 +1,80 @@
+.lobby-page {
+    display: flex;
+    width: 90%;
+    max-width: 1300px;
+    flex-direction: column;
+    padding: 20px;
+    gap: 12px;
+}
+
+.lobby-info {
+    display: flex;
+    gap: 12px;
+}
+
+.player-list {
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+    gap: 4px;
+}
+
+.player-list div {
+    background-color: #d9d9d9;
+    padding: 4px;
+}
+
+.game-settings {
+    background-color: #d9d9d9;
+    padding: 12px;
+    flex: 2;
+}
+
+.lobby-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.setting-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.custom-word-header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.custom-word-header label{
+    display: flex;
+    align-items: center;
+}
+
+.custom-word-header input[type="checkbox"]{
+    width: 20px;
+    height: 20px;
+}
+
+.lobby-info textarea {
+    width: 100%;
+    resize: none;
+    min-height: 250px;
+    box-sizing: border-box;
+}
+
+.lobby-actions {
+    display: flex;
+}
+
+.lobby-actions #start {
+    flex: 1;
+}
+
+.lobby-actions #invite {
+    width: 150px;
+    height: 50px;
+}
+
+
+

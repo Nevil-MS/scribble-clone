@@ -1,4 +1,5 @@
 import GameTitle from "../components/GameTitle"
+import "./LandingPage.css"
 
 function LandingPage() {
     return (

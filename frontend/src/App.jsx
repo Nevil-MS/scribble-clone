@@ -1,8 +1,8 @@
-import LobbyPage from "./pages/LobbyPage.jsx";
+import SettingsOverlay from "./components/SettingsOverlay.jsx";
 
 function App() {
 
-    return <LobbyPage />
+    return <SettingsOverlay />
 }
 
 export default App

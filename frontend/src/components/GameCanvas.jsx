@@ -2,11 +2,8 @@ import { useState } from "react";
 import "./GameCanvas.css";
 
 function GameCanvas() {
-  // waiting | choosing | drawing
   const [mode, setMode] = useState("waiting");
-
   const words = ["Apple", "Rocket", "Dragon"];
-
   return (
     <div className="canvas-container">
       <canvas width={800} height={500}></canvas>
@@ -15,8 +12,7 @@ function GameCanvas() {
         <div className="canvas-overlay">
           <h2>Waiting for players...</h2>
           <p>Minimum 2 players required</p>
-
-          {/* Demo button - remove later */}
+          
           <button onClick={() => setMode("choosing")}>
             Continue
           </button>

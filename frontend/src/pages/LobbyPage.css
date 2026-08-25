@@ -12,18 +12,6 @@
     gap: 12px;
 }
 
-.player-list {
-    display: flex;
-    flex-direction: column;
-    min-width: 200px;
-    gap: 4px;
-}
-
-.player-list div {
-    background-color: #d9d9d9;
-    padding: 4px;
-}
-
 .game-settings {
     background-color: #d9d9d9;
     padding: 6px;

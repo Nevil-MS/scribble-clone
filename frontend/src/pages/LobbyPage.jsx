@@ -1,6 +1,7 @@
 import GameTitle from "../components/GameTitle"
 import GameStatusBar from "../components/GameStatusBar"
 import Chat from "../components/Chat"
+import PlayerList from "../components/PlayerList"
 import "./LobbyPage.css"
 
 function LobbyPage() {
@@ -16,11 +17,7 @@ function LobbyPage() {
                 <div className="lobby-info">
                     {/*lobby-info has three children player-list, lobby-settings, chat*/} 
 
-                    <div className="player-list">
-                        <div>Player 1</div>
-                        <div>Player 2</div>
-                        <div>Player 3</div>
-                    </div>
+                    <PlayerList />
 
                      
                     <div className="game-settings">

@@ -26,7 +26,7 @@
 
 .game-settings {
     background-color: #d9d9d9;
-    padding: 12px;
+    padding: 6px;
     flex: 2;
 }
 
@@ -39,6 +39,11 @@
 .setting-row {
     display: flex;
     justify-content: space-between;
+}
+
+.setting-row select {
+    min-width: 300px;
+    min-height: 30px;
 }
 
 .custom-word-header{

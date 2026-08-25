@@ -3,7 +3,8 @@
     display: grid;
     width: 100%;
     padding: 12px;
-    grid-template-columns: 1fr auto 1fr;
+    gap: 12px;
+    grid-template-columns:200px  2fr 1fr;
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
@@ -27,5 +28,5 @@
 }
 
 .game-status{
-
+    justify-self: center;
 }

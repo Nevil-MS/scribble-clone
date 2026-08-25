@@ -1,8 +1,8 @@
-import LobbyPage from "./pages/LobbyPage.jsx";
+import LandingPage from "./pages/LandingPage";
+// import GamePage from "./pages/GamePage";
 
 function App() {
-
-    return <LobbyPage />
+  return <LandingPage />;
 }
 
-export default App
+export default App;

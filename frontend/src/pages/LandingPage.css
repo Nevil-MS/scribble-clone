@@ -51,8 +51,12 @@
 }
 
 .avatar-setup button {
-    width: 52px;
-    height: 110px;
+    /* we will remove stuff in "avatar-setup button" 
+    when adding icons so we can have icon's dimensions
+    as the clickable area*/
+    
+    width: 50px;
+    height: 100px;
 }
 
 .play-btn {

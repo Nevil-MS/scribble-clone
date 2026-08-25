@@ -4,7 +4,10 @@
     flex-direction: column;
     gap: 4px;
     padding: 6px;
-    flex: 1;    
+    flex: 1;
+
+    height: 100%;
+    min-height: 480px;
 }
 
 .chat-message {

@@ -10,44 +10,91 @@
 .game-content {
     display: flex;
     gap: 12px;
-    align-items: flex-start;
+    align-items: stretch;
 }
 
-/* Canvas */
+.player-list {
+    width: 170px;
+    flex-shrink: 0;
+}
+
 .canvas-section {
-    position: relative;
-    flex: 1;
-    height: 600px;
+    flex: 2;
+    display: flex;
+    flex-direction: column;
     border: 2px solid black;
-    overflow: hidden;
+    background: white;
+    height: 560px;
 }
 
-.canvas-section canvas {
+.chat {
+    width: 220px;
+    height: 564px;   /* was 560px */
+    display: flex;
+    flex-direction: column;
+    background: #d9d9d9;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.chat input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.drawing-area {
+    flex: 1;
+}
+
+.drawing-area canvas {
     width: 100%;
     height: 100%;
     display: block;
+    background: white;
 }
 
-/* Overlay */
-.canvas-overlay {
-    position: absolute;
-    inset: 0;
-
+.canvas-toolbar {
+    height: 48px;
+    border-top: 2px solid black;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 16px;
-
-    background: rgba(255,255,255,0.85);
+    gap: 18px;
+    padding: 0 8px;
 }
 
-.word-buttons {
+.tool-group,
+.brush-group,
+.color-palette {
     display: flex;
-    gap: 12px;
+    gap: 6px;
 }
 
-.word-buttons button {
-    min-width: 120px;
-    height: 40px;
-}
+.canvas-toolbar button {
+    width: 26px;
+    height: 26px;
+    border: 1px solid black;
+    padding: 0;
+}   
+.white     { background: #ffffff !important; }
+.lightgrey { background: #d3d3d3 !important; }
+.grey      { background: #808080 !important; }
+.black     { background: #000000 !important; }
+
+.pink      { background: #ff69b4 !important; }
+.red       { background: #ff0000 !important; }
+.orange    { background: #ff8c00 !important; }
+.brown     { background: #8b4513 !important; }
+
+.yellow    { background: #ffff00 !important; }
+.lime      { background: #7fff00 !important; }
+.green     { background: #008000 !important; }
+.cyan      { background: #00e5ff !important; }
+
+.blue      { background: #0066ff !important; }
+.purple    { background: #8000ff !important; }

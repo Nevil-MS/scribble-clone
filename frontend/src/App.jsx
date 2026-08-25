@@ -1,8 +1,9 @@
-import SettingsOverlay from "./components/SettingsOverlay.jsx";
+// import LandingPage from "./pages/LandingPage";
+import GamePage from "./pages/GamePage";
 
 function App() {
+  return <GamePage />;
 
-    return <SettingsOverlay />
 }
 
-export default App
+export default App;

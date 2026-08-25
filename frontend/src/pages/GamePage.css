@@ -1,0 +1,109 @@
+.game-page {
+    display: flex;
+    width: 90%;
+    max-width: 1300px;
+    flex-direction: column;
+    padding: 20px;
+    gap: 12px;
+}
+
+/* Same as lobby */
+.game-content {
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+}
+
+/* Left panel */
+.player-list {
+    width: 170px;
+    flex-shrink: 0;
+}
+
+/* Middle panel */
+.canvas-section {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid black;
+    background: white;
+    height: 560px;
+}
+
+/* Right panel */
+/* Right panel */
+.chat {
+    width: 220px;
+    height: 564px;   /* was 560px */
+    display: flex;
+    flex-direction: column;
+    background: #d9d9d9;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+/* Messages take remaining space */
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* Input stays at bottom */
+.chat input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Canvas */
+.drawing-area {
+    flex: 1;
+}
+
+.drawing-area canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: white;
+}
+
+/* Toolbar */
+.canvas-toolbar {
+    height: 48px;
+    border-top: 2px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    padding: 0 8px;
+}
+
+.tool-group,
+.brush-group,
+.color-palette {
+    display: flex;
+    gap: 6px;
+}
+
+.canvas-toolbar button {
+    width: 26px;
+    height: 26px;
+    border: 1px solid black;
+    padding: 0;
+}   
+.white     { background: #ffffff !important; }
+.lightgrey { background: #d3d3d3 !important; }
+.grey      { background: #808080 !important; }
+.black     { background: #000000 !important; }
+
+.pink      { background: #ff69b4 !important; }
+.red       { background: #ff0000 !important; }
+.orange    { background: #ff8c00 !important; }
+.brown     { background: #8b4513 !important; }
+
+.yellow    { background: #ffff00 !important; }
+.lime      { background: #7fff00 !important; }
+.green     { background: #008000 !important; }
+.cyan      { background: #00e5ff !important; }
+
+.blue      { background: #0066ff !important; }
+.purple    { background: #8000ff !important; }

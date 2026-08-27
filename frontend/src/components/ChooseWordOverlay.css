@@ -1,0 +1,34 @@
+.canvas-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 46px;      /* stops above toolbar */
+
+    background: rgba(117, 118, 122, 0.497);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+
+    z-index: 5;
+}
+
+.canvas-overlay h2 {
+    color: white;
+    font-size: 22px;
+}
+
+.word-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.word-buttons button {
+    padding: 5px 5px;
+    border: 1px solid black;
+    background: white;
+    cursor: pointer;
+}

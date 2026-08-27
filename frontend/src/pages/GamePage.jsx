@@ -1,10 +1,14 @@
+import { useState } from "react";
 import GameTitle from "../components/GameTitle";
 import GameStatusBar from "../components/GameStatusBar";
 import PlayerList from "../components/PlayerList";
 import Chat from "../components/Chat";
+import ChooseWordOverlay from "../components/ChooseWordOverlay";
 import "./GamePage.css";
 
 function GamePage() {
+  const [showChooseOverlay, setShowChooseOverlay] = useState(true);
+
   return (
     <main>
       <div className="game-page">
@@ -23,7 +27,17 @@ function GamePage() {
               ></canvas>
             </div>
 
-            <div className="canvas-toolbar">
+            {showChooseOverlay && (
+              <ChooseWordOverlay
+                onChoose={() => setShowChooseOverlay(false)}
+              />
+            )}
+
+            <div
+              className={`canvas-toolbar ${
+                showChooseOverlay ? "toolbar-hidden" : ""
+              }`}
+            >
               <div className="tool-group">
                 <button title="Pencil">✏</button>
                 <button title="Eraser">⌫</button>

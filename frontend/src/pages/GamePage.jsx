@@ -4,10 +4,12 @@ import GameStatusBar from "../components/GameStatusBar";
 import PlayerList from "../components/PlayerList";
 import Chat from "../components/Chat";
 import ChooseWordOverlay from "../components/ChooseWordOverlay";
+import WaitingOverlay from "../components/WaitingOverlay";
 import "./GamePage.css";
 
 function GamePage() {
-  const [showChooseOverlay, setShowChooseOverlay] = useState(true);
+  const [gameState, setGameState] = useState("waiting");
+  // States: waiting | choosing | drawing
 
   return (
     <main>
@@ -27,15 +29,17 @@ function GamePage() {
               ></canvas>
             </div>
 
-            {showChooseOverlay && (
+            {gameState === "waiting" && <WaitingOverlay />}
+
+            {gameState === "choosing" && (
               <ChooseWordOverlay
-                onChoose={() => setShowChooseOverlay(false)}
+                onChoose={() => setGameState("drawing")}
               />
             )}
 
             <div
               className={`canvas-toolbar ${
-                showChooseOverlay ? "toolbar-hidden" : ""
+                gameState !== "drawing" ? "toolbar-hidden" : ""
               }`}
             >
               <div className="tool-group">

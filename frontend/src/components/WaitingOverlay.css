@@ -1,0 +1,40 @@
+.canvas-overlay {
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+
+    background: rgba(45, 50, 75, 0.55);
+    z-index: 10;
+}
+
+.canvas-overlay h2 {
+    color: white;
+    margin: 0;
+    font-size: 26px;
+    text-align: center;
+}
+
+.canvas-overlay p {
+    color: white;
+    margin: 0;
+    font-size: 16px;
+}
+
+.waiting-spinner {
+    width: 48px;
+    height: 48px;
+    border: 5px solid rgba(255,255,255,0.3);
+    border-top: 5px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}

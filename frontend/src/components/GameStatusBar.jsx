@@ -1,4 +1,4 @@
-import "./GameStatusBar.css"
+import "./styles/GameStatusBar.css"
 
 function GameStatusBar(){
     return(

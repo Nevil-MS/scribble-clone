@@ -1,5 +1,5 @@
 import { useState } from "react"
-import "./KeybindInput.css"
+import "./styles/KeybindInput.css"
 
 function KeybindInput({label, defaultKey}) {
 

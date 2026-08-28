@@ -1,4 +1,4 @@
-import KeybindInput from "./KeybindInput.jsx"
+import KeybindInput from "../KeybindInput.jsx"
 import "./SettingsOverlay.css"
 
 function SettingsOverlay() {

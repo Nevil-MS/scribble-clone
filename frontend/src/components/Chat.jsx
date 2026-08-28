@@ -1,4 +1,4 @@
-import "./Chat.css"
+import "./styles/Chat.css"
 
 function Chat() {
     return(

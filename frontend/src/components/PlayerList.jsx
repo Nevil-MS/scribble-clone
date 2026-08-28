@@ -1,4 +1,4 @@
-import "./PlayerList.css"
+import "./styles/PlayerList.css"
 
 function PlayerList() {
     return (

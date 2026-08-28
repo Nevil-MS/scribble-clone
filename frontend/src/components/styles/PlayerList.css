@@ -1,8 +1,8 @@
 .player-list {
+    grid-area: player;
     display: flex;
     flex-direction: column;
-    min-width: 220px;
-    flex: 0 0 auto;
+    width: 220px;
     gap: 4px;
     box-sizing: border-box;
 }

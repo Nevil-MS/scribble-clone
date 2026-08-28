@@ -9,7 +9,7 @@ import Leaderboard from "../components/Leaderboard";
 import "./GamePage.css";
 
 function GamePage() {
-  const [gameState, setGameState] = useState("leaderboard");
+  const [gameState, setGameState] = useState("waiting");
 
   // States: waiting | choosing | drawing | leaderboard
 

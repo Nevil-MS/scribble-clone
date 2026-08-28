@@ -5,7 +5,7 @@ import PlayerList from "../components/PlayerList";
 import Chat from "../components/Chat";
 import ChooseWordOverlay from "../components/ChooseWordOverlay";
 import WaitingOverlay from "../components/WaitingOverlay";
-import LeaderboardOverlay from "../components/Leaderboard";
+import Leaderboard from "../components/Leaderboard";
 import "./GamePage.css";
 
 function GamePage() {
@@ -39,7 +39,7 @@ function GamePage() {
               />
             )}
 
-            {gameState === "leaderboard" && <LeaderboardOverlay />}
+            {gameState === "leaderboard" && <Leaderboard />}
 
             <div
               className={`canvas-toolbar ${

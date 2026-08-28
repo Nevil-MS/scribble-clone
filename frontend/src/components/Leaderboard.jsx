@@ -11,7 +11,7 @@ function Leaderboard() {
   ];
 
   return (
-    <div className="canvas-overlay leaderboard-overlay">
+    <div className="canvas-overlay leaderboard">
       <h1>Player 1 Wins!</h1>
 
       <div className="podium">
@@ -51,4 +51,4 @@ function Leaderboard() {
   );
 }
 
-export default LeaderboardOverlay;
+export default Leaderboard;

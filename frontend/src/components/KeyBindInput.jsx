@@ -1,7 +1,7 @@
 import { useState } from "react"
-import "./KeyBindInput.css"
+import "./KeybindInput.css"
 
-function KeyBindInput({label, defaultKey}) {
+function KeybindInput({label, defaultKey}) {
 
     const [key, setKey] = useState(defaultKey)
 
@@ -21,4 +21,4 @@ function KeyBindInput({label, defaultKey}) {
     )
 }
 
-export default KeyBindInput
+export default KeybindInput

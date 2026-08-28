@@ -1,11 +1,11 @@
-.canvas-overlay {
+.choice-overlay {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 46px;      /* stops above toolbar */
 
-    background: rgba(117, 118, 122, 0.497);
+    background: rgba(0, 0, 0, 0.5);
 
     display: flex;
     flex-direction: column;
@@ -16,7 +16,7 @@
     z-index: 5;
 }
 
-.canvas-overlay h2 {
+.choice-overlay h2 {
     color: white;
     font-size: 22px;
 }

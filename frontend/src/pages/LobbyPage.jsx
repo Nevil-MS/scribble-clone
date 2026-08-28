@@ -19,9 +19,11 @@ function LobbyPage() {
 
                     <PlayerList />
 
-                     
+        
                     <div className="game-settings">
-                        <div className="lobby-settings"> 
+                        
+                        <div className="lobby-settings">
+                            
                             <div className="setting-row">
                                 <label>Players</label>
                                 <select defaultValue={2}>
@@ -92,6 +94,7 @@ function LobbyPage() {
                                     <option value={5}>5</option>
                                 </select>
                             </div>
+                            
 
                             <div className="custom-word-header">
                                 <div>Custom word</div>
@@ -109,6 +112,7 @@ function LobbyPage() {
                                 <button id="invite">invite</button>
                             </div>
                         </div>
+                        
                     </div>
 
                     <Chat />

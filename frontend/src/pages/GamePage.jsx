@@ -3,13 +3,16 @@ import GameTitle from "../components/GameTitle";
 import GameStatusBar from "../components/GameStatusBar";
 import PlayerList from "../components/PlayerList";
 import Chat from "../components/Chat";
-import ChooseWordOverlay from "../components/ChooseWordOverlay";
+import ChoiceOverlay from "../components/ChoiceOverlay";
 import WaitingOverlay from "../components/WaitingOverlay";
 import "./GamePage.css";
 
 function GamePage() {
+
   const [gameState, setGameState] = useState("waiting");
   // States: waiting | choosing | drawing
+  /*Gives variable gameState to store the state and function
+    setGameState to change the state inside gameState*/
 
   return (
     <main>
@@ -30,12 +33,17 @@ function GamePage() {
             </div>
 
             {gameState === "waiting" && <WaitingOverlay />}
+            {/*When the gamestate is "waiting" return WaitingOverlay*/}
+
 
             {gameState === "choosing" && (
-              <ChooseWordOverlay
+              <ChoiceOverlay
                 onChoose={() => setGameState("drawing")}
               />
             )}
+            {/* when a button(word) is clicked in the ChoiceOverlay
+            it comes back here and changes the gamestate to drawing. */}
+
 
             <div
               className={`canvas-toolbar ${

@@ -1,4 +1,4 @@
-import KeyBindInput from "./KeybindInput.jsx"
+import KeybindInput from "./KeybindInput.jsx"
 import "./SettingsOverlay.css"
 
 function SettingsOverlay() {
@@ -25,11 +25,11 @@ function SettingsOverlay() {
                     </div>
                     
                     <div className="key-bindings">
-                        <KeyBindInput label="Brush" defaultKey="B" />
-                        <KeyBindInput label="Fill" defaultKey="F" />
-                        <KeyBindInput label="Undo" defaultKey="U" />
-                        <KeyBindInput label="Clear" defaultKey="C" />
-                        <KeyBindInput label="Swap" defaultKey="S" />
+                        <KeybindInput label="Brush" defaultKey="B" />
+                        <KeybindInput label="Fill" defaultKey="F" />
+                        <KeybindInput label="Undo" defaultKey="U" />
+                        <KeybindInput label="Clear" defaultKey="C" />
+                        <KeybindInput label="Swap" defaultKey="S" />
                     </div>     
                 </div>
                             

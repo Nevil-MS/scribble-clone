@@ -31,11 +31,10 @@
     position: relative;
 }
 
-/* Right panel */
-/* Right panel */
+
 .chat {
     width: 220px;
-    height: 564px;   /* was 560px */
+    height: 564px;   
     display: flex;
     flex-direction: column;
     background: #d9d9d9;
@@ -43,19 +42,19 @@
     box-sizing: border-box;
 }
 
-/* Messages take remaining space */
+
 .chat-messages {
     flex: 1;
     overflow-y: auto;
 }
 
-/* Input stays at bottom */
+
 .chat input {
     width: 100%;
     box-sizing: border-box;
 }
 
-/* Canvas */
+
 .drawing-area {
     flex: 1;
 }
@@ -67,7 +66,7 @@
     background: white;
 }
 
-/* Toolbar */
+
 .canvas-toolbar {
     height: 48px;
     border-top: 2px solid black;
@@ -109,13 +108,13 @@
 .blue      { background: #0066ff !important; }
 .purple    { background: #8000ff !important; }
 
-/* Choose Word Overlay */
+
 .canvas-overlay {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    bottom: 46px;              /* Toolbar visible */
+    bottom: 46px;              
 
     display: flex;
     flex-direction: column;
@@ -158,7 +157,7 @@
     cursor: pointer;
 }
 
-/* When the toolbar is hidden, cover it too */
+
 .canvas-section.overlay-active .canvas-overlay {
     bottom: 0;
 }

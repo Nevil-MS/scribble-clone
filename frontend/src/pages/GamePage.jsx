@@ -5,11 +5,13 @@ import PlayerList from "../components/PlayerList";
 import Chat from "../components/Chat";
 import ChooseWordOverlay from "../components/ChooseWordOverlay";
 import WaitingOverlay from "../components/WaitingOverlay";
+import LeaderboardOverlay from "../components/LeaderboardOverlay";
 import "./GamePage.css";
 
 function GamePage() {
-  const [gameState, setGameState] = useState("waiting");
-  // States: waiting | choosing | drawing
+  const [gameState, setGameState] = useState("leaderboard");
+
+  // States: waiting | choosing | drawing | leaderboard
 
   return (
     <main>
@@ -36,6 +38,8 @@ function GamePage() {
                 onChoose={() => setGameState("drawing")}
               />
             )}
+
+            {gameState === "leaderboard" && <LeaderboardOverlay />}
 
             <div
               className={`canvas-toolbar ${

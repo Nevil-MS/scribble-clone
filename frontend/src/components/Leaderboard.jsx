@@ -1,6 +1,6 @@
-import "./LeaderboardOverlay.css";
+import "./Leaderboard.css";
 
-function LeaderboardOverlay() {
+function Leaderboard() {
   const players = [
     { rank: 1, name: "Player 1", points: 1440 },
     { rank: 2, name: "Player 2", points: 1230 },

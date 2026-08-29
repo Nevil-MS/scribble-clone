@@ -1,5 +1,4 @@
-import "./WaitingOverlay.css";
-
+import "./styles/WaitingOverlay.css";
 function WaitingOverlay() {
   return (
     <div className="canvas-overlay waiting-overlay">

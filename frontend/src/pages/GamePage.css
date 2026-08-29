@@ -33,12 +33,10 @@
 /* Canvas */
 
 .canvas-section {
-    flex: 1;
-    position: relative;
-    border: 1px solid black;
-    border-bottom: none;
-    background: white;
-    min-height: 512px;
+  position: relative;
+  height: 512px;
+  border: 1px solid black;
+  background: white;
 }
 
 .drawing-area {
@@ -56,16 +54,14 @@
 /* Right panel */
 
 .chat {
-    width: 220px;
-    height: 512px;   /* Same height as canvas */
-
-    display: flex;
-    flex-direction: column;
-    background: #d9d9d9;
-    padding: 8px;
-    box-sizing: border-box;
+  width: 220px;
+  height: 512px;
+  display: flex;
+  flex-direction: column;
+  background: #d9d9d9;
+  padding: 8px;
+  box-sizing: border-box;
 }
-
 .chat-messages {
     flex: 1;
     overflow-y: auto;
@@ -79,22 +75,28 @@
 /* ---------- Toolbar ---------- */
 
 .canvas-toolbar {
-    height: 48px;
-    border: 1px solid black;
-    border-top: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 18px;
-    padding: 0 8px;
-    background: white;
+  height: 48px;
+  border: 1px solid black;
+  border-top: none;
+  background: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 0 10px;
+
+  flex-wrap: nowrap;      /* keep everything on one line */
+  overflow: hidden;
 }
 
 .tool-group,
 .brush-group,
 .color-palette {
-    display: flex;
-    gap: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
 }
 
 .canvas-toolbar button {

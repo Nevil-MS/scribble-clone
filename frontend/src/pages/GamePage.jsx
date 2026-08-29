@@ -11,6 +11,8 @@ import "./GamePage.css";
 function GamePage() {
 
   const [gameState, setGameState] = useState("waiting");
+
+  // States: lobby | waiting | choosing | drawing | leaderboard
   // States: waiting | choosing | drawing
   /*Gives variable gameState to store the state and function
     setGameState to change the state inside gameState*/
@@ -24,15 +26,17 @@ function GamePage() {
         <div className="game-content">
           <PlayerList />
 
-          <div className="canvas-section">
-            <div className="drawing-area">
-              <canvas
-                id="drawing-board"
-                width={800}
-                height={500}
-              ></canvas>
-            </div>
+          <div className="canvas-column">
+            <div className="canvas-section">
+              <div className="drawing-area">
+                <canvas
+                  id="drawing-board"
+                  width={800}
+                  height={500}
+                ></canvas>
+              </div>
 
+              {gameState === "waiting" && <WaitingOverlay />}
             {gameState === "waiting" && <WaitingOverlay />}
             {/*When the gamestate is "waiting" return WaitingOverlay*/}
 
@@ -45,6 +49,8 @@ function GamePage() {
             {/* when a button(word) is clicked in the ChoiceOverlay
             it comes back here and changes the gamestate to drawing. */}
 
+              {gameState === "leaderboard" && <Leaderboard />}
+            </div>
 
             <div
               className={`canvas-toolbar ${

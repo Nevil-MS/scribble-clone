@@ -7,7 +7,8 @@
     gap: 12px;
 }
 
-/* Same as lobby */
+/* ---------- Main Layout ---------- */
+
 .game-content {
     display: flex;
     gap: 12px;
@@ -15,48 +16,34 @@
 }
 
 /* Left panel */
+
 .player-list {
     width: 170px;
     flex-shrink: 0;
 }
 
-/* Middle panel */
-.canvas-section {
+/* Middle column (Canvas + Toolbar) */
+
+.canvas-column {
     flex: 2;
     display: flex;
     flex-direction: column;
-    border: 1px solid black;
-    background: white;
-    height: 560px;
-    position: relative;
 }
 
+/* Canvas */
 
-.chat {
-    width: 220px;
-    height: 564px;   
-    display: flex;
-    flex-direction: column;
-    background: #d9d9d9;
-    padding: 8px;
-    box-sizing: border-box;
-}
-
-
-.chat-messages {
+.canvas-section {
     flex: 1;
-    overflow-y: auto;
+    position: relative;
+    border: 1px solid black;
+    border-bottom: none;
+    background: white;
+    min-height: 512px;
 }
-
-
-.chat input {
-    width: 100%;
-    box-sizing: border-box;
-}
-
 
 .drawing-area {
-    flex: 1;
+    width: 100%;
+    height: 100%;
 }
 
 .drawing-area canvas {
@@ -66,15 +53,41 @@
     background: white;
 }
 
+/* Right panel */
+
+.chat {
+    width: 220px;
+    height: 512px;   /* Same height as canvas */
+
+    display: flex;
+    flex-direction: column;
+    background: #d9d9d9;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.chat input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ---------- Toolbar ---------- */
 
 .canvas-toolbar {
     height: 48px;
-    border-top: 2px solid black;
+    border: 1px solid black;
+    border-top: none;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 18px;
     padding: 0 8px;
+    background: white;
 }
 
 .tool-group,
@@ -87,9 +100,17 @@
 .canvas-toolbar button {
     width: 26px;
     height: 26px;
-    border: 1px solid rgb(255, 255, 255);
+    border: 1px solid white;
     padding: 0;
-}   
+    cursor: pointer;
+}
+
+.toolbar-hidden {
+    visibility: hidden;
+}
+
+/* ---------- Colour Palette ---------- */
+
 .white     { background: #ffffff !important; }
 .lightgrey { background: #d3d3d3 !important; }
 .grey      { background: #808080 !important; }
@@ -108,23 +129,7 @@
 .blue      { background: #0066ff !important; }
 .purple    { background: #8000ff !important; }
 
-
-.canvas-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 46px;              
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
-
-    background: rgba(45, 50, 75, 0.88);
-    z-index: 5;
-}
+/* ---------- Shared Overlay ---------- */
 
 .canvas-overlay {
     position: absolute;
@@ -136,14 +141,12 @@
     align-items: center;
     gap: 16px;
 
-    background: #808080
-;
+    background: rgba(158, 159, 167, 0.88);
     z-index: 10;
 }
 
-.toolbar-hidden {
-    visibility: hidden;
-}
+/* Choose Word buttons */
+
 .word-buttons {
     display: flex;
     gap: 12px;
@@ -155,9 +158,4 @@
     background: white;
     border: 1px solid black;
     cursor: pointer;
-}
-
-
-.canvas-section.overlay-active .canvas-overlay {
-    bottom: 0;
 }

@@ -2,12 +2,10 @@ import "./WaitingOverlay.css";
 
 function WaitingOverlay() {
   return (
-    <div className="canvas-overlay">
-      <h2>Waiting for player to choose a word</h2>
+    <div className="canvas-overlay waiting-overlay">
+      <h2>Player 1 is choosing a word!</h2>
 
-      <div className="waiting-spinner"></div>
-
-      <p>Please wait...</p>
+      <div className="waiting-avatar">Avatar</div>
     </div>
   );
 }

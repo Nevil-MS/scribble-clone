@@ -1,40 +1,36 @@
-.canvas-overlay {
-    position: absolute;
-    inset: 0;
+.waiting-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 18px;
+  background: rgba(75, 83, 112, 0.88);
+  color: white;
 
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
 }
 
-.canvas-overlay h2 {
-    color: white;
-    margin: 0;
-    font-size: 26px;
-    text-align: center;
+.waiting-avatar {
+  width: 110px;
+  height: 110px;
+
+  border: 3px solid white;
+  background: #d9d9d9;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #333;
+  font-weight: bold;
 }
 
-.canvas-overlay p {
-    color: white;
-    margin: 0;
-    font-size: 16px;
-}
-
-.waiting-spinner {
-    width: 48px;
-    height: 48px;
-    border: 5px solid rgba(255,255,255,0.3);
-    border-top: 5px solid white;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
+.waiting-overlay h2 {
+  margin: 0;
+  font-size: 36px;
+  font-weight: 500;
+  text-align: center;
 }

@@ -5,6 +5,7 @@ import PlayerList from "../components/PlayerList";
 import Chat from "../components/Chat";
 import ChoiceOverlay from "../components/ChoiceOverlay";
 import WaitingOverlay from "../components/WaitingOverlay";
+import Leaderboard from "../components/Leaderboard";
 import "./GamePage.css";
 
 function GamePage() {

@@ -5,7 +5,6 @@ class GameSettings:
     room_id: str
     player_count: int
     language: str
-    draw_time: str
     draw_time: int
     rounds: int
     word_count: int

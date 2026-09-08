@@ -8,4 +8,4 @@ class Turn:
     drawer_pid: str
     word_id: str | None = None
     started_at: datetime | None = None
-    ended_at_at: datetime | None = None
+    ended_at: datetime | None = None

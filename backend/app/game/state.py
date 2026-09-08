@@ -1,0 +1,13 @@
+import enum from Enum
+
+class GameState(Enum):
+    LOBBY = "LOBBY"
+    ROUND_START = "ROUND_START"
+    TURN_START = "TURN_START"
+    WORD_SELECTION = "WORD_SELECTION"
+    PLAYING = "PLAYING"
+    TURN_END = "TURN_END"
+    NEXT_TURN = "NEXT_TURN"
+    ROUND_END = "ROUND_END"
+    NEXT_ROUND = "NEXT_ROUND"
+    GAME_END = "GAME_END"

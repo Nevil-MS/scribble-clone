@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 
 @dataclass
@@ -9,4 +9,4 @@ class Turn:
     word: str | None = None
     word_lengths: list[int] | None = None
     started_at: datetime | None = None
-    ended_at: datetime | None = None
+    points_awarded: dict[str, int] = field(default_factory=dict)

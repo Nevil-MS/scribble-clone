@@ -1,8 +1,10 @@
 import "./LobbyOverlay.css";
+
 function LobbyOverlay() {
   return (
     <div className="canvas-overlay lobby-overlay">
       <div className="lobby-settings">
+
         <div className="setting-row">
           <label>Players</label>
           <select><option>2</option></select>
@@ -33,13 +35,16 @@ function LobbyOverlay() {
           <select><option>2</option></select>
         </div>
 
-        <label>Custom words</label>
-        <textarea placeholder="Minimum of 10 words..." />
+        <div className="setting-row textarea-row">
+          <label>Custom words</label>
+          <textarea placeholder="Minimum of 10 words..." />
+        </div>
 
         <div className="lobby-buttons">
           <button>Start!</button>
           <button>Invite</button>
         </div>
+
       </div>
     </div>
   );

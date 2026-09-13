@@ -134,17 +134,15 @@
 /* ---------- Shared Overlay ---------- */
 
 .canvas-overlay {
-    position: absolute;
-    inset: 0;
+  position: absolute;
+  inset: 0;
 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-    background: rgba(158, 159, 167, 0.88);
-    z-index: 10;
+  background: rgba(190,195,205,0.45);
+  z-index: 10;
 }
 
 /* Choose Word buttons */

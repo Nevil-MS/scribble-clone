@@ -1,16 +1,6 @@
 .waiting-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-
-  background: rgba(75, 83, 112, 0.88);
-  color: white;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 24px;
+    color: white;
+    text-align: center;
 }
 
 .waiting-avatar {

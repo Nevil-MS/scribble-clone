@@ -1,6 +1,8 @@
 import { useState } from "react";
 import GameTitle from "../components/GameTitle";
+import PointsOverlay from "../components/Overlays/PointsOverlay";
 import GameStatusBar from "../components/GameStatusBar";
+import RoundOverlay from "../components/Overlays/RoundOverlay";
 import LobbyOverlay from "../components/LobbyOverlay";
 import PlayerList from "../components/PlayerList";
 import Chat from "../components/Chat";
@@ -12,10 +14,9 @@ import Leaderboard from "../components/Leaderboard";
 import "./GamePage.css";
 
 function GamePage() {
-  const [gameState, setGameState] = useState("drawing")
+  const [gameState, setGameState] = useState("lobby");
 
-  // States: lobby | waiting | choosing | drawing | leaderboard
-
+// States: lobby | round | waiting | choosing | drawing | leaderboard | points
   return (
     <main>
       <div className="game-page">
@@ -28,9 +29,16 @@ function GamePage() {
           <div className="canvas-column">
             <div className="canvas-section">
               <DrawingCanvas />
-
+{gameState === "points" && <PointsOverlay />}
 {gameState === "lobby" && <LobbyOverlay />}
 {gameState === "waiting" && <WaitingOverlay />}
+{gameState === "round" && (
+  <RoundOverlay
+    round={1}
+    totalRounds={3}
+    player="Player 2"
+  />
+)}
 {gameState === "choosing" && (
   <ChoiceOverlay onChoose={() => setGameState("drawing")} />
 )}

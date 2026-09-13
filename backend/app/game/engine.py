@@ -344,3 +344,12 @@ class GameEngine:
 
         else:
             self.game.state = GameState.GAME_END
+
+
+
+    def get_leaderboard(self):
+        return sorted(
+            self.game.leaderboard.values(),
+            key = lambda player: player.points
+            reverse = True
+        )

@@ -6,6 +6,7 @@ class Turn:
     turn_id: str
     round_id: str
     drawer_pid: str
-    word_id: str | None = None
+    word: str | None = None
+    word_lengths: list[int] | None = None
     started_at: datetime | None = None
     ended_at: datetime | None = None

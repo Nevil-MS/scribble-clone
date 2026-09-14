@@ -6,4 +6,4 @@ class Player:
     name: str
     avatar: str
     room_id: str | None = None
-    connected: bool
+    connected: bool = False

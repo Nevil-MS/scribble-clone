@@ -1,4 +1,4 @@
-import enum from Enum
+from enum import Enum
 
 class GameState(Enum):
     LOBBY = "LOBBY"

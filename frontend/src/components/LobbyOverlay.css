@@ -7,9 +7,7 @@
 .lobby-overlay {
   position: absolute;
   inset: 0;
-
   background: rgba(185, 198, 218, 0.35);
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -18,12 +16,10 @@
 .lobby-settings {
   width: 88%;
   max-width: 820px;
-
   background: transparent;
   border: none;
   padding: 18px;
   box-sizing: border-box;
-
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -36,7 +32,14 @@
   gap: 14px;
 }
 
-.setting-row label {
+.setting-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.setting-label label {
+  margin: 0;
   font-size: 15px;
   font-weight: 500;
 }
@@ -47,19 +50,53 @@
   box-sizing: border-box;
 }
 
+/* ---------- Custom Words ---------- */
+
 .textarea-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  grid-template-areas:
+    "label toggle"
+    "textarea textarea";
   align-items: start;
+  gap: 10px 14px;
+}
+
+.textarea-row .setting-label {
+  grid-area: label;
+}
+
+.custom-toggle {
+  grid-area: toggle;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 14px;
+}
+
+.custom-toggle label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.custom-toggle input {
+  margin: 0;
 }
 
 .textarea-row textarea {
+  grid-area: textarea;
   width: 100%;
-  height: 120px;
+  height: 140px;
   resize: none;
   box-sizing: border-box;
   padding: 8px;
   font-family: inherit;
   font-size: 14px;
 }
+
+/* ---------- Buttons ---------- */
 
 .lobby-buttons {
   display: grid;

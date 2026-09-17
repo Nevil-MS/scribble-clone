@@ -14,14 +14,41 @@ import Leaderboard from "../components/Leaderboard";
 import "./GamePage.css";
 
 function GamePage() {
-  const [gameState, setGameState] = useState("lobby");
+  const [gameState, setGameState] = useState("choosing");
+  const [debug] = useState(true);
 
-// States: lobby | round | waiting | choosing | drawing | leaderboard | points
+  // States: lobby | round | waiting | choosing | drawing | leaderboard | points
+
   return (
     <main>
       <div className="game-page">
         <GameTitle />
         <GameStatusBar />
+
+        <select
+  value={gameState}
+  onChange={(e) => setGameState(e.target.value)}
+>
+  <option value="lobby">Lobby</option>
+  <option value="round">Round</option>
+  <option value="waiting">Waiting</option>
+  <option value="choosing">Choosing</option>
+  <option value="drawing">Drawing</option>
+  <option value="points">Points</option>
+  <option value="leaderboard">Leaderboard</option>
+</select> 
+
+        {debug && (
+          <div className="debug-nav">
+            <button onClick={() => setGameState("lobby")}>Lobby</button>
+            <button onClick={() => setGameState("round")}>Round</button>
+            <button onClick={() => setGameState("waiting")}>Waiting</button>
+            <button onClick={() => setGameState("choosing")}>Choose</button>
+            <button onClick={() => setGameState("drawing")}>Draw</button>
+            <button onClick={() => setGameState("points")}>Points</button>
+            <button onClick={() => setGameState("leaderboard")}>Board</button>
+          </div>
+        )}
 
         <div className="game-content">
           <PlayerList />
@@ -29,20 +56,29 @@ function GamePage() {
           <div className="canvas-column">
             <div className="canvas-section">
               <DrawingCanvas />
-{gameState === "points" && <PointsOverlay />}
-{gameState === "lobby" && <LobbyOverlay />}
-{gameState === "waiting" && <WaitingOverlay />}
-{gameState === "round" && (
-  <RoundOverlay
-    round={1}
-    totalRounds={3}
-    player="Player 2"
-  />
-)}
-{gameState === "choosing" && (
-  <ChoiceOverlay onChoose={() => setGameState("drawing")} />
-)}
-{gameState === "leaderboard" && <Leaderboard />}
+
+              {gameState === "points" && <PointsOverlay />}
+
+              {gameState === "lobby" && (
+                <LobbyOverlay onStart={() => setGameState("round")} />
+              )}
+
+              {gameState === "waiting" && <WaitingOverlay />}
+
+              {gameState === "round" && (
+                <RoundOverlay
+                  round={1}
+                  totalRounds={3}
+                  player="Player 2"
+                  onContinue={() => setGameState("choosing")}
+                />
+              )}
+
+              {gameState === "choosing" && (
+                <ChoiceOverlay onChoose={() => setGameState("drawing")} />
+              )}
+
+              {gameState === "leaderboard" && <Leaderboard />}
             </div>
 
             <CanvasToolbar hidden={gameState !== "drawing"} />

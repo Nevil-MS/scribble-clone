@@ -1,31 +1,43 @@
-.game-status-bar {
-    background-color: #d9d9d9;
-
-    display: grid;
-    grid-template-columns: 220px minmax(400px, 1fr) 300px;
-
-    width: 100%;
-    height: 100%;
-
-    padding: 12px;
-    gap: 12px;
-
-    box-sizing: border-box;
-    align-items: center;
+.game-status-bar{
+    height: 54px;
+    background:#d9d9d9;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 14px;
+    box-sizing:border-box;
 }
 
-.left-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+.left-info{
+    display:flex;
+    align-items:center;
+    gap:12px;
 }
 
-.game-status {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.game-logo{
+    display:flex;
+    gap:4px;
 }
 
-.game-status-bar button {
-    justify-self: end;
+.game-status{
+    font-size:18px;
+}
+
+.right-info{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.round-timer{
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+
+.settings-btn{
+    border:none;
+    background:transparent;
+    padding:0;
+    cursor:pointer;
 }

@@ -252,7 +252,7 @@ class GameEngine:
             return "CLOSE"
 
         return "WRONG"
-        
+
 
 
     def add_points(self, pid: str, points: int):
@@ -339,3 +339,30 @@ class GameEngine:
             key = lambda player: player.points,
             reverse = True
         )
+
+
+
+    def add_late_player(self, pid: str):
+        # Add the player to the list of currently connected players
+        self.game.connected_players.add(pid)
+
+        # Add the player to the end of the turn order
+        # so they will get a drawing turn later in the current round
+        self.game.turn_order.append(pid)
+
+        # Create a leaderboard entry for the new player
+        # so they can immediately earn and accumulate points
+        self.game.leaderboard[pid] = Leaderboard(
+            pid=pid,
+            points=0
+        )
+
+        # If a turn is currently in progress, add the player
+        # to its point-tracking dictionary so they can earn
+        # points by guessing during the current turn
+        if self.game.current_turn is not None:
+            self.game.current_turn.points_awarded[pid] = 0
+
+        
+
+        

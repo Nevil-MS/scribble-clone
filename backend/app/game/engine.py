@@ -265,7 +265,11 @@ class GameEngine:
         # Calculate artist points from the successful guesses in this turn.
 
         draw_time = self.game.settings.draw_time
-        eligible_guessers = self.game.settings.player_count - 1
+        eligible_guessers = len(self.game.players) - 1
+
+        # Prevent division by zero in case the game reaches an unexpected state.
+        if eligible_guessers <= 0: 
+            return 0
 
         speed_total = 0
 

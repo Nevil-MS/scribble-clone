@@ -246,6 +246,8 @@ class GameEngine:
             if self.all_guessers_correct():
                 return self.end_turn("WORD_GUESSED")
 
+            self.reveal_hint()
+
             return "CORRECT"
 
         if self.is_close_guess(message, answer):
@@ -367,6 +369,64 @@ class GameEngine:
         if self.game.current_turn is not None:
             self.game.current_turn.points_awarded[pid] = 0
 
-        
 
-        
+
+    def get_max_hints(self, word_length: int):
+        # Set the maximum number of hints based on word length
+        if word_length == 3:
+            return 1
+        elif word_length in (4, 5):
+            return 2
+        elif word_length == 6:
+            return 3
+        elif word_length == 7:
+            return 4
+        else:
+            return 5
+
+
+
+    def get_word_pattern(self):
+        turn = self.game.current_turn
+        word = turn.word
+
+        # Hide unrevealed letters while keeping spaces visible
+        pattern = [
+            char if char == " " or i in turn.revealed_positions else "_"
+            for i, char in enumerate(word)
+        ]
+
+        return "".join(pattern)
+
+
+
+    def reveal_hint(self):
+        turn = self.game.current_turn
+
+        # Get the maximum hints allowed for this word
+        word_length = sum(turn.word_lengths)
+
+        max_hints = min(
+            self.game.settings.hints,
+            self.get_max_hints(word_length)
+        )
+
+        # Stop if the maximum number of hints has been reached
+        if turn.hints_used >= max_hints:
+            return None
+
+        # Find positions that have not been revealed yet
+        available_positions = [
+            i
+            for i, char in enumerate(turn.word)
+            if char != " " and i not in turn.revealed_positions
+        ]
+
+        # Reveal one random letter
+        position = random.choice(available_positions)
+
+        turn.revealed_positions.add(position)
+        turn.hints_used += 1
+
+        # Return the updated word pattern
+        return self.get_word_pattern()

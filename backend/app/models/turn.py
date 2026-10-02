@@ -10,3 +10,6 @@ class Turn:
     word_lengths: list[int] | None = None
     started_at: datetime | None = None
     points_awarded: dict[str, int] = field(default_factory=dict)
+
+    hints_awarded: int = 0
+    revealed_positions: set[int] = field(default_factory=set)

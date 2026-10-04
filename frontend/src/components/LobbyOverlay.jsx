@@ -149,21 +149,7 @@ function LobbyOverlay({ onStart }) {
             <label>Custom words</label>
           </div>
 
-          <div className="custom-toggle">
-            <label>
-              <input
-                type="checkbox"
-                checked={settings.customWordsOnly}
-                onChange={(e) =>
-                  handleChange(
-                    "customWordsOnly",
-                    e.target.checked
-                  )
-                }
-              />
-              Use custom words only
-            </label>
-          </div>
+        
 
           <textarea
             placeholder="Minimum of 10 words..."

@@ -1,34 +1,34 @@
 import "./styles/PlayerList.css";
 import AvatarPlaceholder from "./AvatarPlaceholder";
-function PlayerList() {
+
+const defaultPlayers = [
+  { id: 1, name: "Player 1", points: 0, initials: "P1" },
+  { id: 2, name: "Player 2", points: 0, initials: "P2" },
+  { id: 3, name: "Player 3", points: 0, initials: "P3" },
+];
+
+function PlayerList({ players = defaultPlayers }) {
   return (
     <div className="player-list">
-      <div className="player-info">
-        <div className="player-position">#1</div>
-        <div className="player-name">Player 1</div>
-        <div className="player-points">0 points</div>
-        <div className="player-avatar">
-          <AvatarPlaceholder initials="P1" />
-        </div>
-      </div>
+      {players.map((player, index) => (
+        <div className="player-info" key={player.id}>
+          <div className="player-position">#{index + 1}</div>
 
-      <div className="player-info">
-        <div className="player-position">#2</div>
-        <div className="player-name">Player 2</div>
-        <div className="player-points">0 points</div>
-        <div className="player-avatar">
-          <AvatarPlaceholder initials="P2" />
-        </div>
-      </div>
+          <div className="player-name">
+            {player.name}
+          </div>
 
-      <div className="player-info">
-        <div className="player-position">#3</div>
-        <div className="player-name">Player 3</div>
-        <div className="player-points">0 points</div>
-        <div className="player-avatar">
-          <AvatarPlaceholder initials="P3" />
+          <div className="player-points">
+            {player.points} points
+          </div>
+
+          <div className="player-avatar">
+            <AvatarPlaceholder
+              initials={player.initials || `P${index + 1}`}
+            />
+          </div>
         </div>
-      </div>
+      ))}
     </div>
   );
 }

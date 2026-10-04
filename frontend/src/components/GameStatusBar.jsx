@@ -1,18 +1,30 @@
 import "./styles/GameStatusBar.css";
 import IconPlaceholder from "./IconPlaceholder";
 
-function GameStatusBar() {
+function GameStatusBar({
+  round = 1,
+  totalRounds = 3,
+  status = "waiting",
+  timeRemaining = null,
+}) {
   return (
     <div className="game-status-bar">
       <div className="left-info">
         <div className="round-timer">
-  <IconPlaceholder label="TM" />
-</div>
+          <IconPlaceholder label="TM" />
+          {timeRemaining !== null && (
+            <span>{timeRemaining}</span>
+          )}
+        </div>
 
-        <div className="round-info">Round 1 of 3</div>
+        <div className="round-info">
+          Round {round} of {totalRounds}
+        </div>
       </div>
 
-      <div className="game-status">waiting</div>
+      <div className="game-status">
+        {status}
+      </div>
 
       <div className="right-info">
         <button className="settings-btn">

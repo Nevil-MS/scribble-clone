@@ -1,0 +1,21 @@
+.choice-overlay {
+    color: white;
+    text-align: center;
+}
+
+.choice-overlay h2 {
+    color: white;
+    font-size: 22px;
+}
+
+.word-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.word-buttons button {
+    padding: 5px 5px;
+    border: 1px solid black;
+    background: white;
+    cursor: pointer;
+}

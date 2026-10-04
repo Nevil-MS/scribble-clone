@@ -1,0 +1,54 @@
+.lobby-page {
+    display: grid;
+
+    grid-template-areas:
+        "title title title"
+        "bar bar bar"
+        "player settings chat";
+
+    grid-template-columns: min-content 1fr min-content;
+    grid-template-rows: min-content min-content 1fr;
+
+    
+
+    width: 100%;
+    max-width: 1300px;
+    height: 100vh;
+    gap: 12px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+
+
+
+.lobby-page > .game-title {
+    grid-area: title;
+}
+
+
+
+
+.lobby-page > .game-status-bar {
+    grid-area: bar;
+}
+
+
+
+
+.lobby-page > .player-list {
+    grid-area: player;
+}
+
+
+.lobby-page > .lobby-settings {
+    grid-area: settings;
+}
+
+
+
+
+.lobby-page > .chat {
+    grid-area: chat;
+}
+

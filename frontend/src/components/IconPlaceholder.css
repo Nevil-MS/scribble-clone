@@ -1,0 +1,18 @@
+.icon-placeholder {
+  width: 22px;
+  height: 22px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border: 1px solid #666;
+  border-radius: 4px;
+  background: #e5e5e5;
+
+  font-size: 9px;
+  color: #555;
+  box-sizing: border-box;
+
+  flex-shrink: 0;
+}

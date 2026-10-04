@@ -1,0 +1,95 @@
+.leaderboard-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+
+  background: #4b5370;
+  color: white;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.leaderboard-overlay h1 {
+  margin: 0 0 28px;
+  font-size: 34px;
+}
+
+/* ---------- Top 3 ---------- */
+
+.podium {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 22px;
+  margin-bottom: 36px;
+  width: 100%;
+}
+
+.podium-card {
+  width: 150px;
+  border: 2px solid white;
+  padding: 12px;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.first  { height: 200px; }
+.second { height: 170px; }
+.third  { height: 150px; }
+
+.avatar-placeholder {
+  width: 70px;
+  height: 70px;
+  border: 2px solid white;
+  margin-bottom: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.podium-card h2,
+.podium-card h3,
+.podium-card p {
+  margin: 4px 0;
+}
+
+/* ---------- Remaining players ---------- */
+
+.leaderboard-rest {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  width: 100%;
+}
+
+.mini-player {
+  width: 90px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.avatar-placeholder.small {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 8px;
+}
+
+.mini-player span,
+.mini-player small {
+  margin-top: 2px;
+}

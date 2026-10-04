@@ -1,0 +1,95 @@
+.lobby-settings {
+    display: flex;
+    flex-direction: column;
+
+    height: 100%;
+    width: 100%;
+
+    min-width: 400px;
+
+    padding: 6px;
+    gap: 6px;
+
+    box-sizing: border-box;
+
+    background-color: #d9d9d9;
+}
+
+
+/* Settings such as Players, Language, Drawtime, etc. */
+.settings-scroll {
+    flex: 0 1 auto;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+
+/* The actual select controls */
+.settings-scroll select {
+    height: 30px;
+    font-size: 1em;
+}
+
+
+/* Custom words section */
+.custom-words {
+    flex: 1 1 auto;
+    min-height: 35%;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Custom words header */
+.custom-word-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.custom-word-header label {
+    display: flex;
+    align-items: center;
+}
+
+
+.custom-word-header input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+}
+
+
+/* Custom words textarea */
+.custom-words textarea {
+    flex: 1 1 auto;
+
+    width: 100%;
+
+    resize: none;
+
+    box-sizing: border-box;
+}
+
+
+/* Start / Invite */
+.lobby-actions {
+    display: flex;
+}
+
+
+.lobby-actions #start {
+    flex: 1;
+}
+
+
+.lobby-actions #invite {
+    width: 150px;
+    height: 50px;
+}

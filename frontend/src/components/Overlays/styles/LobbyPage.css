@@ -1,0 +1,33 @@
+.lobby-page {
+    display: grid;
+    grid-template-areas: 
+
+        "title title title"
+        "bar bar bar"
+        "player settings chat"
+    
+    ;
+
+    grid-template-columns: min-content auto auto;
+    grid-template-rows: min-content min-content 1fr;
+
+}
+
+.lobby-info {
+    display: grid;
+    grid-template-columns: min-content auto auto;
+    gap: 12px;
+}
+
+.lobby-info > .player-list {
+    grid-column: 1;
+}
+
+.lobby-info > .game-settings {
+    grid-column: 2;
+}
+
+.lobby-info > .chat {
+    grid-column: 3;
+}
+

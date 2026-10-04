@@ -159,3 +159,53 @@
     border: 1px solid black;
     cursor: pointer;
 }
+.avatar-placeholder {
+  width: 42px;
+  height: 42px;
+
+  border: 2px solid #555;
+  border-radius: 50%;
+
+  background: #d9d9d9;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  font-size: 16px;
+  color: #444;
+}
+.icon-placeholder {
+  width: 22px;
+  height: 22px;
+
+  border: 1px solid #555;
+  background: #d8d8d8;
+  color: #555;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 9px;
+  font-weight: bold;
+  border-radius: 4px;
+
+  flex-shrink: 0;
+}
+/* ---------- Debug Navigation ---------- */
+
+.debug-nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.debug-nav button {
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}

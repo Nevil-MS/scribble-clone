@@ -1,4 +1,5 @@
 import "./LobbyOverlay.css";
+import IconPlaceholder from "./IconPlaceholder";
 
 function LobbyOverlay() {
   return (
@@ -6,37 +7,66 @@ function LobbyOverlay() {
       <div className="lobby-settings">
 
         <div className="setting-row">
-          <label>Players</label>
+          <div className="setting-label">
+            <IconPlaceholder label="PL" />
+            <label>Players</label>
+          </div>
           <select><option>2</option></select>
         </div>
 
         <div className="setting-row">
-          <label>Language</label>
+          <div className="setting-label">
+            <IconPlaceholder label="LG" />
+            <label>Language</label>
+          </div>
           <select><option>English</option></select>
         </div>
 
         <div className="setting-row">
-          <label>Drawtime</label>
+          <div className="setting-label">
+            <IconPlaceholder label="TM" />
+            <label>Drawtime</label>
+          </div>
           <select><option>80</option></select>
         </div>
 
         <div className="setting-row">
-          <label>Rounds</label>
+          <div className="setting-label">
+            <IconPlaceholder label="RD" />
+            <label>Rounds</label>
+          </div>
           <select><option>3</option></select>
         </div>
 
         <div className="setting-row">
-          <label>Word Count</label>
+          <div className="setting-label">
+            <IconPlaceholder label="WC" />
+            <label>Word Count</label>
+          </div>
           <select><option>3</option></select>
         </div>
 
         <div className="setting-row">
-          <label>Hints</label>
+          <div className="setting-label">
+            <IconPlaceholder label="HT" />
+            <label>Hints</label>
+          </div>
           <select><option>2</option></select>
         </div>
 
         <div className="setting-row textarea-row">
-          <label>Custom words</label>
+          <div className="setting-label">
+            <IconPlaceholder label="CW" />
+            <label>Custom words</label>
+          </div>
+
+          <div className="custom-toggle">
+            <label>
+              <input type="checkbox" />
+              Use custom words only
+            </label>
+          </div>
+
           <textarea placeholder="Minimum of 10 words..." />
         </div>
 

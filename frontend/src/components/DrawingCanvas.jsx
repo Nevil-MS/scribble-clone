@@ -23,12 +23,33 @@ const DrawingCanvas = forwardRef(function DrawingCanvas(
   const historyRef = useRef([]);
   const currentStrokeRef = useRef(null);
 
+  // Allows the fill tool to include anti-aliased pixels
+  // that are slightly different from the target color.
+  const FILL_TOLERANCE = 40;
+
+  function fillWhiteBackground() {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+
+    context.globalCompositeOperation = "source-over";
+    context.fillStyle = "#ffffff";
+
+    context.fillRect(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+  }
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
 
     context.lineCap = "round";
     context.lineJoin = "round";
+
+    fillWhiteBackground();
   }, []);
 
   // Clear canvas whenever a new round begins
@@ -47,6 +68,8 @@ const DrawingCanvas = forwardRef(function DrawingCanvas(
       canvas.width,
       canvas.height
     );
+
+    fillWhiteBackground();
 
     historyRef.current = [];
     drawingRef.current = false;
@@ -81,12 +104,15 @@ const DrawingCanvas = forwardRef(function DrawingCanvas(
     return [r, g, b, 255];
   }
 
+  // Compare pixels using a small tolerance.
+  // This prevents tiny anti-aliased pixels from being
+  // left behind by the fill tool.
   function colorsMatch(a, b) {
     return (
-      a[0] === b[0] &&
-      a[1] === b[1] &&
-      a[2] === b[2] &&
-      a[3] === b[3]
+      Math.abs(a[0] - b[0]) <= FILL_TOLERANCE &&
+      Math.abs(a[1] - b[1]) <= FILL_TOLERANCE &&
+      Math.abs(a[2] - b[2]) <= FILL_TOLERANCE &&
+      Math.abs(a[3] - b[3]) <= FILL_TOLERANCE
     );
   }
 
@@ -108,12 +134,18 @@ const DrawingCanvas = forwardRef(function DrawingCanvas(
 
     context.lineWidth = stroke.size;
 
-    context.strokeStyle =
-      stroke.tool === "eraser"
-        ? "#ffffff"
-        : stroke.color;
+    if (stroke.tool === "eraser") {
+      context.globalCompositeOperation = "destination-out";
+      context.strokeStyle = "#000000";
+    } else {
+      context.globalCompositeOperation = "source-over";
+      context.strokeStyle = stroke.color;
+    }
 
     context.stroke();
+
+    // Reset after every stroke
+    context.globalCompositeOperation = "source-over";
   }
 
   function floodFill(startX, startY, fillColor) {
@@ -143,6 +175,8 @@ const DrawingCanvas = forwardRef(function DrawingCanvas(
 
     const replacementColor = hexToRgba(fillColor);
 
+    // Do nothing if the selected area is already
+    // approximately the same color.
     if (colorsMatch(targetColor, replacementColor)) {
       return false;
     }
@@ -170,6 +204,7 @@ const DrawingCanvas = forwardRef(function DrawingCanvas(
         pixels[index + 3],
       ];
 
+      // Only fill pixels that belong to the original region.
       if (!colorsMatch(currentColor, targetColor)) {
         continue;
       }
@@ -200,6 +235,9 @@ const DrawingCanvas = forwardRef(function DrawingCanvas(
       canvas.width,
       canvas.height
     );
+
+    // Restore the white canvas before replaying history.
+    fillWhiteBackground();
 
     for (const action of historyRef.current) {
       if (action.type === "stroke") {
@@ -318,6 +356,8 @@ const DrawingCanvas = forwardRef(function DrawingCanvas(
       canvas.width,
       canvas.height
     );
+
+    fillWhiteBackground();
 
     historyRef.current = [];
 

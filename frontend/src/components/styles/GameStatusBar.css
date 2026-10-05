@@ -1,43 +1,63 @@
-.game-status-bar{
+.game-status-bar {
     height: 54px;
-    background:#d9d9d9;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:0 14px;
-    box-sizing:border-box;
+
+    background: #d9d9d9;
+
+    display: grid;
+
+    grid-template-columns: 220px minmax(0, 1fr) 230px;
+
+    gap: 12px;
+
+    align-items: center;
+
+    padding: 0;
+
+    box-sizing: border-box;
 }
 
-.left-info{
-    display:flex;
-    align-items:center;
-    gap:12px;
+.left-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-.game-logo{
-    display:flex;
-    gap:4px;
+.game-logo {
+    display: flex;
+    gap: 4px;
 }
 
-.game-status{
-    font-size:18px;
+.game-status {
+    font-size: 18px;
+    text-align: center;
 }
 
-.right-info{
-    display:flex;
-    align-items:center;
-    gap:10px;
+.right-info {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
 }
 
-.round-timer{
-    display:flex;
-    align-items:center;
-    gap:6px;
+.round-timer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 100%;
 }
 
-.settings-btn{
-    border:none;
-    background:transparent;
-    padding:0;
-    cursor:pointer;
+.settings-btn {
+    width: 28px;
+    height: 28px;
+
+    border: none;
+    background: transparent;
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
 }

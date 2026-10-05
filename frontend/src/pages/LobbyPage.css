@@ -6,49 +6,57 @@
         "bar bar bar"
         "player settings chat";
 
-    grid-template-columns: min-content 1fr min-content;
-    grid-template-rows: min-content min-content 1fr;
+    grid-template-columns: 220px minmax(0, 1fr) 230px;
+    grid-template-rows: auto 54px auto;
 
-    
+    width: min(1300px, calc(100% - 40px));
+    min-height: 0;
 
-    width: 100%;
-    max-width: 1300px;
-    height: 100vh;
     gap: 12px;
     padding: 20px;
+
     box-sizing: border-box;
+    margin: 0 auto;
 }
 
+/* Title */
 
-
-
-.lobby-page > .game-title {
+.lobby-page > h1 {
     grid-area: title;
+
+    margin: 0;
+    text-align: left;
 }
 
-
-
+/* Status bar */
 
 .lobby-page > .game-status-bar {
     grid-area: bar;
+    width: 100%;
 }
 
-
-
+/* Player list */
 
 .lobby-page > .player-list {
     grid-area: player;
+
+    width: 220px;
 }
 
+/* Settings */
 
 .lobby-page > .lobby-settings {
     grid-area: settings;
+    width: 100%;
+    min-width: 0;
+    height: auto;
 }
-
-
-
 
 .lobby-page > .chat {
     grid-area: chat;
+    width: 100%;
+    min-width: 0;
+    height: calc(100% - 80px);
+    align-self: start;
+    box-sizing: border-box;
 }
-

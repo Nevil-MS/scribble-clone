@@ -1,37 +1,40 @@
 .points-overlay {
     color: white;
     text-align: center;
+
+    flex-direction: column;
+    gap: 8px;
 }
 
 .points-subtitle {
-  font-size: 20px;
-  margin: 0;
-  opacity: 0.9;
+    font-size: 20px;
+    margin: 0;
 }
 
 .points-word {
-  margin: 8px 0;
-  font-size: 42px;
-  color: #fefefd;
+    margin: 4px 0;
+    font-size: 42px;
 }
 
 .points-message {
-  margin-bottom: 24px;
-  font-size: 18px;
+    margin: 4px 0 18px;
+    font-size: 18px;
 }
 
 .points-list {
-  width: 260px;
+    width: 300px;
 }
 
 .points-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  font-size: 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 8px 0;
+
+    font-size: 20px;
 }
 
 .score {
-  color: #ffffff;
-  font-weight: bold;
+    font-weight: bold;
 }

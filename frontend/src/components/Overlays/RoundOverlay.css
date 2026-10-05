@@ -2,3 +2,9 @@
     color: white;
     text-align: center;
 }
+
+.round-countdown {
+    font-size: 48px;
+    font-weight: bold;
+    margin-top: 20px;
+}

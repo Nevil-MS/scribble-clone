@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import GameTitle from "../components/GameTitle";
 import PointsOverlay from "../components/Overlays/PointsOverlay";
 import GameStatusBar from "../components/GameStatusBar";
@@ -13,9 +13,13 @@ import DrawingCanvas from "../components/DrawingCanvas";
 import Leaderboard from "../components/Leaderboard";
 import "./GamePage.css";
 
-function GamePage() {
-  const [gameState, setGameState] = useState("choosing");
-  const [debug] = useState(true);
+ function GamePage({ settings }) {
+  const canvasRef = useRef(null);
+
+  const [gameState, setGameState] = useState("round");
+  const [tool, setTool] = useState("pencil");
+const [color, setColor] = useState("#000000");
+const [size, setSize] = useState(7);
 
   const [players, setPlayers] = useState([
     { id: 1, name: "Player 1", points: 0, initials: "P1" },
@@ -24,7 +28,11 @@ function GamePage() {
   ]);
 
   const [round, setRound] = useState(1);
-  const [totalRounds, setTotalRounds] = useState(3);
+
+  const [totalRounds, setTotalRounds] = useState(
+    settings?.rounds ?? 3
+  );
+
   const [gameStatus, setGameStatus] = useState("waiting");
   const [timeRemaining, setTimeRemaining] = useState(null);
 
@@ -33,8 +41,6 @@ function GamePage() {
     { id: 2, player: "Player 2", text: "Hi!" },
   ]);
 
-  // Central place for game-state transitions.
-  // The networking layer can use these game events later.
   function handleGameEvent(event) {
     switch (event.type) {
       case "LOBBY":
@@ -43,30 +49,43 @@ function GamePage() {
 
       case "ROUND_STARTED":
         setGameState("round");
+        setGameStatus("Round starting...");
+        setTimeRemaining(null);
         break;
 
       case "WAITING":
         setGameState("waiting");
+        setTimeRemaining(null);
         break;
 
       case "CHOOSING":
         setGameState("choosing");
+        setGameStatus("Choosing word...");
+        setTimeRemaining(null);
         break;
 
       case "DRAWING":
         setGameState("drawing");
+        setGameStatus("Player 2 is drawing");
+        setTimeRemaining(settings?.drawtime ?? 80);
         break;
 
       case "POINTS":
         setGameState("points");
+        setGameStatus("Round complete");
+        setTimeRemaining(null);
         break;
 
       case "LEADERBOARD":
         setGameState("leaderboard");
+        setGameStatus("Game complete");
+        setTimeRemaining(null);
         break;
 
       case "TIMER_EXPIRED":
-        setGameState("leaderboard");
+        setGameState("points");
+        setGameStatus("Round complete");
+        setTimeRemaining(null);
         break;
 
       default:
@@ -74,9 +93,51 @@ function GamePage() {
     }
   }
 
+  // Drawing timer
+  useEffect(() => {
+    if (gameState !== "drawing" || timeRemaining === null) {
+      return;
+    }
+
+    if (timeRemaining <= 0) {
+      handleGameEvent({ type: "TIMER_EXPIRED" });
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setTimeRemaining((previous) => previous - 1);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [gameState, timeRemaining]);
+
+  // Move to next round or leaderboard after Points
+  useEffect(() => {
+    if (gameState !== "points") {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      if (round < totalRounds) {
+        setRound((previous) => previous + 1);
+
+        handleGameEvent({
+          type: "ROUND_STARTED",
+        });
+      } else {
+        handleGameEvent({
+          type: "LEADERBOARD",
+        });
+      }
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [gameState, round, totalRounds]);
+
   return (
     <main>
       <div className="game-page">
+
         <GameTitle />
 
         <GameStatusBar
@@ -86,69 +147,34 @@ function GamePage() {
           timeRemaining={timeRemaining}
         />
 
-        <select
-          value={gameState}
-          onChange={(e) => setGameState(e.target.value)}
-        >
-          <option value="lobby">Lobby</option>
-          <option value="round">Round</option>
-          <option value="waiting">Waiting</option>
-          <option value="choosing">Choosing</option>
-          <option value="drawing">Drawing</option>
-          <option value="points">Points</option>
-          <option value="leaderboard">Leaderboard</option>
-        </select>
-
-        {debug && (
-          <div className="debug-nav">
-            <button onClick={() => handleGameEvent({ type: "LOBBY" })}>
-              Lobby
-            </button>
-
-            <button onClick={() => handleGameEvent({ type: "ROUND_STARTED" })}>
-              Round
-            </button>
-
-            <button onClick={() => handleGameEvent({ type: "WAITING" })}>
-              Waiting
-            </button>
-
-            <button onClick={() => handleGameEvent({ type: "CHOOSING" })}>
-              Choose
-            </button>
-
-            <button onClick={() => handleGameEvent({ type: "DRAWING" })}>
-              Draw
-            </button>
-
-            <button onClick={() => handleGameEvent({ type: "POINTS" })}>
-              Points
-            </button>
-
-            <button onClick={() => handleGameEvent({ type: "LEADERBOARD" })}>
-              Board
-            </button>
-
-            <button
-              onClick={() => handleGameEvent({ type: "TIMER_EXPIRED" })}
-            >
-              Timer End
-            </button>
-          </div>
-        )}
-
         <div className="game-content">
+
           <PlayerList players={players} />
 
           <div className="canvas-column">
-            <div className="canvas-section">
-              <DrawingCanvas
-                onStroke={(stroke) => {
-                  console.log("Stroke to send:", stroke);
-                }}
-              />
 
-              {gameState === "points" && <PointsOverlay />}
+            <div className="canvas-section">
+
+              <DrawingCanvas
+              ref={canvasRef}
+  round={round}
+  color={color}
+  size={size}
+  tool={tool}
+  onStroke={(stroke) => {
+    console.log("Stroke to send:", stroke);
+  }}
+  onUndo={() => {
+    console.log("Undo");
+  }}
+  onClear={() => {
+    console.log("Clear");
+  }}
+/>
+
+              {gameState === "points" && (
+                <PointsOverlay />
+              )}
 
               {gameState === "lobby" && (
                 <LobbyOverlay
@@ -158,20 +184,26 @@ function GamePage() {
                       settings
                     );
 
-                    handleGameEvent({ type: "ROUND_STARTED" });
+                    handleGameEvent({
+                      type: "ROUND_STARTED",
+                    });
                   }}
                 />
               )}
 
-              {gameState === "waiting" && <WaitingOverlay />}
+              {gameState === "waiting" && (
+                <WaitingOverlay />
+              )}
 
               {gameState === "round" && (
                 <RoundOverlay
                   round={round}
                   totalRounds={totalRounds}
                   player="Player 2"
-                  onContinue={() =>
-                    handleGameEvent({ type: "CHOOSING" })
+                  onComplete={() =>
+                    handleGameEvent({
+                      type: "CHOOSING",
+                    })
                   }
                 />
               )}
@@ -181,15 +213,31 @@ function GamePage() {
                   onChoose={(word) => {
                     console.log("Word selected:", word);
 
-                    handleGameEvent({ type: "DRAWING" });
+                    handleGameEvent({
+                      type: "DRAWING",
+                    });
                   }}
                 />
               )}
 
-              {gameState === "leaderboard" && <Leaderboard />}
+              {gameState === "leaderboard" && (
+                <Leaderboard />
+              )}
+
             </div>
 
-            <CanvasToolbar hidden={gameState !== "drawing"} />
+            <CanvasToolbar
+  hidden={gameState !== "drawing"}
+  tool={tool}
+  setTool={setTool}
+  color={color}
+  setColor={setColor}
+  size={size}
+  setSize={setSize}
+  onUndo={() => canvasRef.current?.undo()}
+  onClear={() => canvasRef.current?.clearCanvas()}
+/>
+
           </div>
 
           <Chat
@@ -198,6 +246,7 @@ function GamePage() {
               console.log("Message to send:", text);
             }}
           />
+
         </div>
       </div>
     </main>

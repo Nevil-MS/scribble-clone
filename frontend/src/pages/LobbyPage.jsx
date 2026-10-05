@@ -5,7 +5,7 @@ import LobbySettings from "../components/LobbySettings"
 import PlayerList from "../components/PlayerList"
 import "./LobbyPage.css"
 
-function LobbyPage() {
+function LobbyPage({ onStart }) {
     return (
         <main>
             <div className="lobby-page">
@@ -16,7 +16,7 @@ function LobbyPage() {
 
                     <PlayerList />
 
-                    <LobbySettings />
+                    <LobbySettings onStart={onStart} />
 
                     <Chat />
 

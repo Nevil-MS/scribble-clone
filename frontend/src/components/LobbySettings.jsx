@@ -1,13 +1,35 @@
-import "./styles/LobbySettings.css"
+import { useState } from "react";
+import "./styles/LobbySettings.css";
 
-function LobbySettings () {
+function LobbySettings({ onStart }) {
+    const [settings, setSettings] = useState({
+        players: 2,
+        language: "English",
+        drawtime: 80,
+        rounds: 3,
+        wordCount: 3,
+        hints: 2,
+    });
+
+    function handleChange(setting, value) {
+        setSettings((previous) => ({
+            ...previous,
+            [setting]: value,
+        }));
+    }
+
     return (
         <div className="lobby-settings">
 
             <div className="settings-scroll">
 
                 <label>Players</label>
-                <select defaultValue={2}>
+                <select
+                    value={settings.players}
+                    onChange={(e) =>
+                        handleChange("players", Number(e.target.value))
+                    }
+                >
                     <option value={2}>2</option>
                     <option value={3}>3</option>
                     <option value={4}>4</option>
@@ -16,12 +38,22 @@ function LobbySettings () {
                 </select>
 
                 <label>Language</label>
-                <select defaultValue="en">
-                    <option value="en">English</option>
+                <select
+                    value={settings.language}
+                    onChange={(e) =>
+                        handleChange("language", e.target.value)
+                    }
+                >
+                    <option value="English">English</option>
                 </select>
 
                 <label>Drawtime</label>
-                <select defaultValue={80}>
+                <select
+                    value={settings.drawtime}
+                    onChange={(e) =>
+                        handleChange("drawtime", Number(e.target.value))
+                    }
+                >
                     <option value={15}>15</option>
                     <option value={20}>20</option>
                     <option value={30}>30</option>
@@ -38,7 +70,12 @@ function LobbySettings () {
                 </select>
 
                 <label>Rounds</label>
-                <select defaultValue={3}>
+                <select
+                    value={settings.rounds}
+                    onChange={(e) =>
+                        handleChange("rounds", Number(e.target.value))
+                    }
+                >
                     <option value={2}>2</option>
                     <option value={3}>3</option>
                     <option value={4}>4</option>
@@ -47,7 +84,12 @@ function LobbySettings () {
                 </select>
 
                 <label>Word Count</label>
-                <select defaultValue={3}>
+                <select
+                    value={settings.wordCount}
+                    onChange={(e) =>
+                        handleChange("wordCount", Number(e.target.value))
+                    }
+                >
                     <option value={1}>1</option>
                     <option value={2}>2</option>
                     <option value={3}>3</option>
@@ -56,7 +98,12 @@ function LobbySettings () {
                 </select>
 
                 <label>Hints</label>
-                <select defaultValue={2}>
+                <select
+                    value={settings.hints}
+                    onChange={(e) =>
+                        handleChange("hints", Number(e.target.value))
+                    }
+                >
                     <option value={0}>0</option>
                     <option value={1}>1</option>
                     <option value={2}>2</option>
@@ -85,12 +132,22 @@ function LobbySettings () {
             </div>
 
             <div className="lobby-actions">
-                <button id="start">Start!</button>
-                <button id="invite">invite</button>
+
+                <button
+                    id="start"
+                    onClick={() => onStart(settings)}
+                >
+                    Start!
+                </button>
+
+                <button id="invite">
+                    invite
+                </button>
+
             </div>
 
         </div>
-    )
+    );
 }
 
-export default LobbySettings
+export default LobbySettings;

@@ -1,7 +1,7 @@
 import GameTitle from "../components/GameTitle";
 import "./LandingPage.css";
 
-function LandingPage() {
+function LandingPage({ onPlay }) {
   return (
     <main>
       <GameTitle />
@@ -23,7 +23,7 @@ function LandingPage() {
           <button>next</button>
         </div>
 
-        <button className="play-btn">Play!</button>
+        <button className="play-btn" onClick={onPlay}>Play!</button>
       </div>
     </main>
   );

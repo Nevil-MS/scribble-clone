@@ -81,7 +81,7 @@ A real-time, web-based multiplayer game where one player draws a secret word and
 | **Frontend** | React, JavaScript (ES6+), HTML5, CSS3, HTML5 Canvas API |
 | **Backend** | Python, FastAPI, Uvicorn (ASGI server) |
 | **Real-time** | WebSockets |
-| **Database** | MongoDB |
+| **Database** | SQlite |
 | **Communication** | WebSockets + HTTPS |
 | **Design** | Figma |
 | **Tools** | VS Code, Git, GitHub |
@@ -236,11 +236,6 @@ skribbl-clone/
 
 ## 🚀 Installation & Setup
 
-### Prerequisites
-- Node.js (v18+) and npm
-- Python 3.10+
-- MongoDB (local or Atlas)
-- Git
 
 ### 1. Clone the repository
 ```bash
@@ -262,36 +257,9 @@ uvicorn app.main:app --reload
 ```
 Backend runs at `http://localhost:8000`
 
-### 3. Frontend setup
-```bash
-cd frontend
-npm install
-npm start        # or: npm run dev (if using Vite)
-```
-Frontend runs at `http://localhost:3000` (or `5173` for Vite)
 
-### 4. Environment variables
-Create a `.env` file in `backend/`:
-```
-MONGO_URI=mongodb://localhost:27017
-DB_NAME=skribbl_clone
-```
-
----
 
 ## 📊 Project Status
-
-### ✅ Completed
-- [x] Project idea and topic finalization
-- [x] Software Requirements Specification (SRS) – v1.0
-- [x] Tech stack selection
-- [x] Low-fidelity UI wireframes (Figma)
-
-### 🔄 In Progress
-- [ ] Project repository setup (GitHub)
-- [ ] High-fidelity UI design
-
-### ⏳ Remaining
 
 **Frontend**
 - [ ] Home page (username, avatar, create/join)
@@ -351,7 +319,6 @@ DB_NAME=skribbl_clone
 - The server remains online during gameplay
 - Target devices are desktops/laptops (mobile not in the initial scope)
 
----
 
 ## 🔮 Future Enhancements
 - Mobile and touch-screen support
@@ -363,23 +330,10 @@ DB_NAME=skribbl_clone
 - Fill-bucket tool and undo
 - Multiple languages
 
----
 
-## 👥 Team
-
-| Name | Role |
-|------|------|
-| _Your Name_ | _Role_ |
-| _Team Member_ | _Role_ |
-
----
 
 ## 📄 References
 - IEEE SRS Standard
 - HTML5 Canvas API
 - React, FastAPI, MongoDB documentation
 
----
-
-## 📜 License
-This project is developed for educational purposes. Add a license (e.g., MIT) if you plan to publish it.

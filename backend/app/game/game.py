@@ -17,7 +17,8 @@ class Game:
 
     players: dict[str, Player] = field(default_factory=dict)
     connected_players: set[str] = field(default_factory=set)
-    
+    host_pid: str | None = None
+
     turn_order: list[str] = field(default_factory=list)
     current_turn_index: int = 0
 

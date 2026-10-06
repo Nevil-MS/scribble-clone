@@ -1,15 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./RoundOverlay.css";
 
 function RoundOverlay({ round, totalRounds, player, onComplete }) {
   const [countdown, setCountdown] = useState(3);
+  const completedRef = useRef(false);
 
+  // Reset countdown when a new round starts
+  useEffect(() => {
+    setCountdown(3);
+    completedRef.current = false;
+  }, [round]);
+
+  // Countdown
   useEffect(() => {
     const timer = setInterval(() => {
       setCountdown((previous) => {
         if (previous <= 1) {
           clearInterval(timer);
-          onComplete();
           return 0;
         }
 
@@ -18,7 +25,15 @@ function RoundOverlay({ round, totalRounds, player, onComplete }) {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [onComplete]);
+  }, [round]);
+
+  // Complete the round after countdown reaches 0
+  useEffect(() => {
+    if (countdown === 0 && !completedRef.current) {
+      completedRef.current = true;
+      onComplete();
+    }
+  }, [countdown, onComplete]);
 
   return (
     <div className="canvas-overlay round-overlay">

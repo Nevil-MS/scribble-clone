@@ -1,138 +1,430 @@
 import { useEffect, useRef, useState } from "react";
+
+import { connectGameSocket } from "../network/gameSocket";
+
 import GameTitle from "../components/GameTitle";
+
 import PointsOverlay from "../components/Overlays/PointsOverlay";
+
 import GameStatusBar from "../components/GameStatusBar";
-import RoundOverlay from "../components/Overlays/RoundOverlay";
+
 import LobbyOverlay from "../components/LobbyOverlay";
+
 import PlayerList from "../components/PlayerList";
+
 import Chat from "../components/Chat";
+
 import CanvasToolbar from "../components/CanvasToolbar";
+
 import ChoiceOverlay from "../components/Overlays/ChoiceOverlay";
+
 import WaitingOverlay from "../components/Overlays/WaitingOverlay";
+
 import DrawingCanvas from "../components/DrawingCanvas";
+
 import Leaderboard from "../components/Leaderboard";
+
 import "./GamePage.css";
 
- function GamePage({ settings }) {
+function GamePage({ playerName, roomId, pid }) {
   const canvasRef = useRef(null);
 
-  const [gameState, setGameState] = useState("round");
-  const [tool, setTool] = useState("pencil");
-const [color, setColor] = useState("#000000");
-const [size, setSize] = useState(7);
+  const socketRef = useRef(null);
 
-  const [players, setPlayers] = useState([
-    { id: 1, name: "Player 1", points: 0, initials: "P1" },
-    { id: 2, name: "Player 2", points: 0, initials: "P2" },
-    { id: 3, name: "Player 3", points: 0, initials: "P3" },
-  ]);
+  const pidRef = useRef(null);
+
+  /*
+   * This is now controlled by the backend.
+   *
+   * lobby
+   * waiting
+   * choosing
+   * drawing
+   * points
+   * leaderboard
+   */
+  const [gameState, setGameState] = useState("lobby");
+
+  const [tool, setTool] = useState("pencil");
+
+  const [color, setColor] = useState("#000000");
+
+  const [size, setSize] = useState(7);
+
+  const [players, setPlayers] = useState([]);
 
   const [round, setRound] = useState(1);
 
-  const [totalRounds, setTotalRounds] = useState(
-    settings?.rounds ?? 3
-  );
+  const [totalRounds, setTotalRounds] = useState(3);
 
-  const [gameStatus, setGameStatus] = useState("waiting");
+  const [gameStatus, setGameStatus] = useState("Waiting for players...");
+
   const [timeRemaining, setTimeRemaining] = useState(null);
 
-  const [messages, setMessages] = useState([
-    { id: 1, player: "Player 1", text: "Hello!" },
-    { id: 2, player: "Player 2", text: "Hi!" },
-  ]);
+  const [messages, setMessages] = useState([]);
 
-  function handleGameEvent(event) {
-    switch (event.type) {
-      case "LOBBY":
-        setGameState("lobby");
-        break;
+  const [wordOptions, setWordOptions] = useState([]);
 
-      case "ROUND_STARTED":
-        setGameState("round");
-        setGameStatus("Round starting...");
-        setTimeRemaining(null);
-        break;
+  const [word, setWord] = useState(null);
 
-      case "WAITING":
-        setGameState("waiting");
-        setTimeRemaining(null);
-        break;
+  const [wordPattern, setWordPattern] = useState(null);
 
-      case "CHOOSING":
-        setGameState("choosing");
-        setGameStatus("Choosing word...");
-        setTimeRemaining(null);
-        break;
+  const [isDrawer, setIsDrawer] = useState(false);
 
-      case "DRAWING":
-        setGameState("drawing");
-        setGameStatus("Player 2 is drawing");
-        setTimeRemaining(settings?.drawtime ?? 80);
-        break;
+  /*
+   * Convert backend game states into the existing UI states.
+   */
+  function applyBackendGameState(data) {
+    if (data.players) {
+      setPlayers(
+        data.players.map((player) => ({
+          id: player.pid,
+          name: player.name,
+          points: player.points ?? 0,
+          initials: player.name
+            .slice(0, 2)
+            .toUpperCase(),
+          avatar: player.avatar,
+        }))
+      );
+    }
 
-      case "POINTS":
-        setGameState("points");
-        setGameStatus("Round complete");
-        setTimeRemaining(null);
-        break;
+    if (data.settings) {
+      setTotalRounds(data.settings.rounds);
+    }
 
-      case "LEADERBOARD":
-        setGameState("leaderboard");
-        setGameStatus("Game complete");
-        setTimeRemaining(null);
-        break;
+    if (data.current_round !== null && data.current_round !== undefined) {
+      setRound(data.current_round);
+    }
 
-      case "TIMER_EXPIRED":
-        setGameState("points");
-        setGameStatus("Round complete");
-        setTimeRemaining(null);
-        break;
+    if (data.word !== undefined) {
+      setWord(data.word);
+    }
 
-      default:
-        console.warn("Unknown game event:", event);
+    if (data.state) {
+      switch (data.state) {
+        case "LOBBY":
+          setGameState("lobby");
+          setGameStatus("Waiting for players...");
+          setTimeRemaining(null);
+          break;
+
+        case "ROUND_START":
+          setGameState("waiting");
+          setGameStatus("Round starting...");
+          break;
+
+        case "TURN_START":
+          setGameState("waiting");
+          setGameStatus("Turn starting...");
+          break;
+
+        case "WORD_SELECTION":
+          setGameState("choosing");
+          setGameStatus("Choose a word");
+          break;
+
+        case "PLAYING":
+          setGameState("drawing");
+          setGameStatus(
+            isDrawer ? "You are drawing" : "Player is drawing"
+          );
+          break;
+
+        case "TURN_END":
+          setGameState("points");
+          setGameStatus("Round complete");
+          setTimeRemaining(null);
+          break;
+
+        case "ROUND_END":
+          setGameState("points");
+          setGameStatus("Round complete");
+          setTimeRemaining(null);
+          break;
+
+        case "GAME_END":
+          setGameState("leaderboard");
+          setGameStatus("Game complete");
+          setTimeRemaining(null);
+          break;
+
+        default:
+          console.log("Unhandled backend state:", data.state);
+      }
     }
   }
 
-  // Drawing timer
+  /*
+   * WebSocket connection
+   */
   useEffect(() => {
-    if (gameState !== "drawing" || timeRemaining === null) {
+    if (!roomId) {
       return;
     }
 
-    if (timeRemaining <= 0) {
-      handleGameEvent({ type: "TIMER_EXPIRED" });
+    const connection = connectGameSocket({
+      roomId,
+      pid,
+
+      onOpen: () => {
+        console.log("Connected to game room:", roomId);
+      },
+
+      onMessage: (message) => {
+        console.log("Received from server:", message);
+
+        /*
+         * Backend gives us our PID immediately after connecting.
+         */
+        if (message.type === "connection") {
+          pidRef.current = message.data.pid;
+
+          console.log(
+            "Connected with PID:",
+            message.data.pid
+          );
+
+          connection.send("join", {
+            name: playerName,
+            avatar: "default",
+          });
+
+          return;
+        }
+
+        /*
+         * Main game state.
+         */
+        if (message.type === "game_state") {
+          const data = message.data;
+
+          console.log("Game state:", data);
+
+          /*
+           * Special word events don't necessarily contain
+           * a normal `state` field.
+           */
+          if (data.event === "word_selected") {
+            setWord(data.word);
+            setWordPattern(data.pattern);
+            setIsDrawer(Boolean(data.is_drawer));
+
+            setGameState("drawing");
+            setGameStatus(
+              data.is_drawer
+                ? "You are drawing"
+                : "Player is drawing"
+            );
+
+            return;
+          }
+
+          if (data.event === "word_visibility") {
+            setWord(data.word);
+            setWordPattern(data.pattern);
+            setIsDrawer(Boolean(data.is_drawer));
+
+            return;
+          }
+
+          applyBackendGameState(data);
+          return;
+        }
+
+        /*
+         * Backend sends word choices only to the drawer.
+         */
+        if (message.type === "word_options") {
+          setWordOptions(message.data.options ?? []);
+          setGameState("choosing");
+          setGameStatus("Choose a word");
+          return;
+        }
+
+        /*
+         * Backend timer.
+         */
+        if (message.type === "timer") {
+          setTimeRemaining(message.data.seconds);
+
+          if (message.data.phase === "drawing") {
+            setGameState("drawing");
+          }
+
+          return;
+        }
+
+        /*
+         * Player joined.
+         *
+         * A game_state normally follows this, so the player
+         * list itself is updated from game_state.
+         */
+        if (message.type === "player_joined") {
+          console.log(
+            "Player joined:",
+            message.data.player
+          );
+
+          return;
+        }
+
+        if (message.type === "player_left") {
+          console.log(
+            "Player left:",
+            message.data.pid
+          );
+
+          return;
+        }
+
+        /*
+         * Chat.
+         */
+        if (message.type === "chat") {
+          const chatMessage = message.data;
+
+          setMessages((previous) => [
+            ...previous,
+            {
+              id: `${Date.now()}-${chatMessage.pid}`,
+              player: chatMessage.name,
+              text: chatMessage.message,
+            },
+          ]);
+
+          return;
+        }
+
+        /*
+         * System messages.
+         */
+        if (message.type === "system_message") {
+          setMessages((previous) => [
+            ...previous,
+            {
+              id: `${Date.now()}-system`,
+              player: "System",
+              text: message.data.message,
+            },
+          ]);
+
+          return;
+        }
+
+        /*
+         * Final leaderboard.
+         */
+        if (message.type === "leaderboard") {
+          console.log(
+            "Leaderboard:",
+            message.data.players
+          );
+
+          setGameState("leaderboard");
+          setGameStatus("Game complete");
+
+          return;
+        }
+
+        if (message.type === "error") {
+          console.error(
+            "Backend error:",
+            message.data.message
+          );
+
+          return;
+        }
+      },
+
+      onClose: () => {
+        console.log("Game connection closed.");
+      },
+
+      onError: (error) => {
+        console.error(
+          "Game connection error:",
+          error
+        );
+      },
+    });
+
+    socketRef.current = connection;
+
+    return () => {
+      connection?.close();
+      socketRef.current = null;
+    };
+  }, [roomId, playerName, pid]);
+
+  /*
+   * Lobby start.
+   *
+   * First update the backend settings,
+   * then tell the backend to start the game.
+   */
+  function handleLobbyStart(settings) {
+    console.log("Lobby settings:", settings);
+
+    const connection = socketRef.current;
+
+    if (!connection) {
+      console.error("No WebSocket connection.");
       return;
     }
 
-    const timer = setTimeout(() => {
-      setTimeRemaining((previous) => previous - 1);
-    }, 1000);
+    connection.send("lobby_update", {
+      player_count: settings.players,
+      language: settings.language,
+      draw_time: settings.drawtime,
+      rounds: settings.rounds,
+      word_count: settings.wordCount,
+      hints: settings.hints,
+      custom_words: settings.customWords
+        ? settings.customWords
+            .split(",")
+            .map((word) => word.trim())
+            .filter(Boolean)
+        : [],
+      custom_words_only: settings.customWordsOnly,
+    });
 
-    return () => clearTimeout(timer);
-  }, [gameState, timeRemaining]);
+    connection.send("start_game");
+  }
 
-  // Move to next round or leaderboard after Points
-  useEffect(() => {
-    if (gameState !== "points") {
+  /*
+   * Word selection.
+   */
+  function handleWordChoice(option) {
+    console.log("Word selected:", option);
+
+    socketRef.current?.send("select_word", {
+      word_id: option.word_id,
+    });
+
+    setWordOptions([]);
+  }
+
+  /*
+   * Chat.
+   */
+  function handleSendMessage(text) {
+    if (!text.trim()) {
       return;
     }
 
-    const timer = setTimeout(() => {
-      if (round < totalRounds) {
-        setRound((previous) => previous + 1);
+    socketRef.current?.send("chat", {
+      message: text,
+    });
+  }
 
-        handleGameEvent({
-          type: "ROUND_STARTED",
-        });
-      } else {
-        handleGameEvent({
-          type: "LEADERBOARD",
-        });
-      }
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, [gameState, round, totalRounds]);
+  /*
+   * Drawing.
+   */
+  function handleStroke(stroke) {
+    socketRef.current?.send("draw", stroke);
+  }
 
   return (
     <main>
@@ -156,38 +448,26 @@ const [size, setSize] = useState(7);
             <div className="canvas-section">
 
               <DrawingCanvas
-              ref={canvasRef}
-  round={round}
-  color={color}
-  size={size}
-  tool={tool}
-  onStroke={(stroke) => {
-    console.log("Stroke to send:", stroke);
-  }}
-  onUndo={() => {
-    console.log("Undo");
-  }}
-  onClear={() => {
-    console.log("Clear");
-  }}
-/>
+                ref={canvasRef}
+                round={round}
+                color={color}
+                size={size}
+                tool={tool}
 
-              {gameState === "points" && (
-                <PointsOverlay />
-              )}
+                onStroke={handleStroke}
+
+                onUndo={() => {
+                  console.log("Undo");
+                }}
+
+                onClear={() => {
+                  console.log("Clear");
+                }}
+              />
 
               {gameState === "lobby" && (
                 <LobbyOverlay
-                  onStart={(settings) => {
-                    console.log(
-                      "Settings received by GamePage:",
-                      settings
-                    );
-
-                    handleGameEvent({
-                      type: "ROUND_STARTED",
-                    });
-                  }}
+                  onStart={handleLobbyStart}
                 />
               )}
 
@@ -195,29 +475,15 @@ const [size, setSize] = useState(7);
                 <WaitingOverlay />
               )}
 
-              {gameState === "round" && (
-                <RoundOverlay
-                  round={round}
-                  totalRounds={totalRounds}
-                  player="Player 2"
-                  onComplete={() =>
-                    handleGameEvent({
-                      type: "CHOOSING",
-                    })
-                  }
+              {gameState === "choosing" && (
+                <ChoiceOverlay
+                  options={wordOptions}
+                  onChoose={handleWordChoice}
                 />
               )}
 
-              {gameState === "choosing" && (
-                <ChoiceOverlay
-                  onChoose={(word) => {
-                    console.log("Word selected:", word);
-
-                    handleGameEvent({
-                      type: "DRAWING",
-                    });
-                  }}
-                />
+              {gameState === "points" && (
+                <PointsOverlay />
               )}
 
               {gameState === "leaderboard" && (
@@ -227,24 +493,22 @@ const [size, setSize] = useState(7);
             </div>
 
             <CanvasToolbar
-  hidden={gameState !== "drawing"}
-  tool={tool}
-  setTool={setTool}
-  color={color}
-  setColor={setColor}
-  size={size}
-  setSize={setSize}
-  onUndo={() => canvasRef.current?.undo()}
-  onClear={() => canvasRef.current?.clearCanvas()}
-/>
+              hidden={gameState !== "drawing"}
+              tool={tool}
+              setTool={setTool}
+              color={color}
+              setColor={setColor}
+              size={size}
+              setSize={setSize}
+              onUndo={() => canvasRef.current?.undo()}
+              onClear={() => canvasRef.current?.clearCanvas()}
+            />
 
           </div>
 
           <Chat
             messages={messages}
-            onSendMessage={(text) => {
-              console.log("Message to send:", text);
-            }}
+            onSendMessage={handleSendMessage}
           />
 
         </div>

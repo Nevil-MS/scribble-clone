@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import uuid
+import random
 from typing import Any
 
 from fastapi import WebSocket, WebSocketDisconnect
@@ -58,6 +59,29 @@ _phase_tasks: dict[str, asyncio.Task] = {}
 _hint_tasks: dict[str, list[asyncio.Task]] = {}
 _disconnect_tasks: dict[tuple[str, str], asyncio.Task] = {}
 
+# Player profile defaults
+AVATAR_IDS = [
+    "avatar_01",
+    "avatar_02",
+    "avatar_03",
+    "avatar_04",
+    "avatar_05",
+    "avatar_06",
+]
+
+RANDOM_NAME_PARTS = [
+    "Happy",
+    "Lucky",
+    "Swift",
+    "Clever",
+    "Tiny",
+    "Mighty",
+    "Sleepy",
+    "Brave",
+    "Pixel",
+    "Sunny",
+]
+
 
 # ----------------------------
 # Basic helpers
@@ -67,6 +91,29 @@ _disconnect_tasks: dict[tuple[str, str], asyncio.Task] = {}
 def generate_pid() -> str:
     return str(uuid.uuid4())
 
+# Temporarly generate name and avatar for the user
+def generate_random_name() -> str:
+    return f"{random.choice(RANDOM_NAME_PARTS)}{random.randint(100, 999)}"
+
+
+def generate_random_avatar() -> str:
+    return random.choice(AVATAR_IDS)
+
+def get_unique_player_name(game: Game, name: str) -> str:
+    existing_names = {
+        player.name
+        for player in game.players.values()
+    }
+
+    if name not in existing_names:
+        return name
+
+    number = 2
+
+    while f"{name}({number})" in existing_names:
+        number += 1
+
+    return f"{name}({number})"
 
 def generate_room_id() -> str:
     return uuid.uuid4().hex[:6].upper()
@@ -173,7 +220,7 @@ def serialize_game_state(game: Game, viewer_pid: str | None = None) -> dict[str,
             else None
         ),
         "word": visible_word_for(game, viewer_pid) if viewer_pid else None,
-        "word_visible": (
+        "word_available": (
             visible_word_for(game, viewer_pid) is not None
             if viewer_pid
             else False
@@ -334,12 +381,15 @@ async def handle_join(game: Game, pid: str, data: dict[str, Any]):
     avatar = str(data.get("avatar", "")).strip()
 
     if not name:
-        await send_error(pid, "Name is required before joining a room.")
-        return
+        name = generate_random_name()
 
     if not avatar:
-        await send_error(pid, "Avatar is required before joining a room.")
+        avatar = generate_random_avatar()
+    elif avatar not in AVATAR_IDS:
+        await send_error(pid, "Invalid avatar.")
         return
+
+    name = get_unique_player_name(game, name)
 
     if game.state == GameState.GAME_END:
         await send_error(pid, "This game has already ended.")
@@ -959,26 +1009,20 @@ async def permanent_remove_player(game: Game, pid: str):
     _disconnect_tasks.pop(task_key, None)
 
     player = game.players.get(pid)
+
     if player is None or player.connected:
         return
 
     was_host = game.host_pid == pid
+
+    # Permanently remove the player from this room/game.
     game_engine(game).remove_player(pid)
 
-    if was_host:
-        connected = [
-            candidate
-            for candidate in game.players
-            if candidate in game.connected_players
-        ]
-        game.host_pid = connected[0] if connected else None
+    # If the host somehow reaches permanent removal while the room
+    # still exists, assign an active player as the new host.
+    if was_host and game.connected_players:
+        game.host_pid = next(iter(game.connected_players))
 
-    await connection_manager.send_to_players(
-        game.connected_players,
-        player_left(pid),
-    )
-
-    if was_host and game.host_pid is not None:
         await connection_manager.send_to_players(
             game.connected_players,
             system_message(
@@ -986,14 +1030,14 @@ async def permanent_remove_player(game: Game, pid: str):
             ),
         )
 
+    await connection_manager.send_to_players(
+        game.connected_players,
+        player_left(pid),
+    )
+
     await send_game_state(game)
 
-    if not game.players:
-        cancel_turn_runtime(game)
-        room_manager.remove_room(game.room_id)
-
-
-async def disconnect_grace_worker(game: Game, pid: str, seconds: int = 30):
+async def disconnect_grace_worker(game: Game, pid: str, seconds: int = 15):
     try:
         await asyncio.sleep(seconds)
         await permanent_remove_player(game, pid)
@@ -1009,12 +1053,29 @@ async def handle_disconnect(game: Game, pid: str):
     game.connected_players.discard(pid)
     player.connected = False
 
-    await connection_manager.send_to_players(
-        game.connected_players,
-        system_message(
-            f"{player.name} disconnected. They can reconnect for 30 seconds."
-        ),
-    )
+    # If nobody is active anymore, delete the room immediately.
+    if not game.connected_players:
+        cancel_turn_runtime(game)
+        room_manager.remove_room(game.room_id)
+        return
+
+    # Host keeps their role during the 15-second reconnect grace period.
+    if game.host_pid == pid:
+        await connection_manager.send_to_players(
+            game.connected_players,
+            system_message(
+                f"{player.name} lost connection. "
+                "They can reconnect within 15 seconds."
+            ),
+        )
+    else:
+        await connection_manager.send_to_players(
+            game.connected_players,
+            system_message(
+                f"{player.name} disconnected. "
+                "They can reconnect for 15 seconds."
+            ),
+        )
 
     # GameEngine decides immediate gameplay consequences; networking only
     # manages the connection and the later grace-period removal.

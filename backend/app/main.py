@@ -4,9 +4,12 @@ from .networking.handlers import (
     room_manager,
     websocket_endpoint,
     generate_room_id,
+    generate_pid,
+    generate_random_name,
+    generate_random_avatar,
 )
 from .models.gamesettings import GameSettings
-
+from .models.player import Player
 
 app = FastAPI(
     title="Skribbl Clone Backend",
@@ -21,8 +24,18 @@ async def root():
 
 
 @app.post("/rooms")
-async def create_room():
+async def create_room(
+    name: str | None = None,
+    avatar: str | None = None,
+):
     room_id = generate_room_id()
+    pid = generate_pid()
+
+    if not name:
+        name = generate_random_name()
+
+    if not avatar:
+        avatar = generate_random_avatar()
 
     settings = GameSettings(
         room_id=room_id,
@@ -38,11 +51,24 @@ async def create_room():
 
     room = room_manager.create_room(settings)
 
+    player = Player(
+        pid=pid,
+        name=name,
+        avatar=avatar,
+        room_id=room_id,
+        connected=False,
+    )
+    
+    room.players[pid] = player
+    room.host_pid = pid
+
     return {
         "room_id": room.room_id,
+        "pid": pid,
+        "name": player.name,
+        "avatar": player.avatar,
         "message": "Room created successfully",
     }
-
 
 @app.websocket("/ws/{room_id}")
 async def websocket_route(

@@ -349,41 +349,25 @@ class GameEngine:
 
 
     def add_late_player(self, pid: str):
-        if pid not in self.game.players:
-            raise ValueError("Player does not exist in this game.")
-
+        # Add the player to the list of currently connected players
         self.game.connected_players.add(pid)
 
-        if pid not in self.game.turn_order:
-            self.game.turn_order.append(pid)
+        # Add the player to the end of the turn order
+        # so they will get a drawing turn later in the current round
+        self.game.turn_order.append(pid)
 
-        if pid not in self.game.leaderboard:
-            self.game.leaderboard[pid] = Leaderboard(
-                pid=pid,
-                points=0
-            )
+        # Create a leaderboard entry for the new player
+        # so they can immediately earn and accumulate points
+        self.game.leaderboard[pid] = Leaderboard(
+            pid=pid,
+            points=0
+        )
 
+        # If a turn is currently in progress, add the player
+        # to its point-tracking dictionary so they can earn
+        # points by guessing during the current turn
         if self.game.current_turn is not None:
-            self.game.current_turn.points_awarded.setdefault(pid, 0)
-
-    def remove_player(self, pid: str):
-        self.game.connected_players.discard(pid)
-        self.game.players.pop(pid, None)
-        self.game.leaderboard.pop(pid, None)
-        self.game.turn_order = [
-            player_pid
-            for player_pid in self.game.turn_order
-            if player_pid != pid
-        ]
-        self.game.guesses.pop(pid, None)
-
-        if self.game.current_turn is not None:
-            self.game.current_turn.points_awarded.pop(pid, None)
-
-        if self.game.current_turn_index >= len(self.game.turn_order):
-            self.game.current_turn_index = max(
-                0, len(self.game.turn_order) - 1
-            )
+            self.game.current_turn.points_awarded[pid] = 0
 
 
 

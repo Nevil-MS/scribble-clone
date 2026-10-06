@@ -11,5 +11,5 @@ class Turn:
     started_at: datetime | None = None
     points_awarded: dict[str, int] = field(default_factory=dict)
 
-    hints_awarded: int = 0
+    hints_used: int = 0
     revealed_positions: set[int] = field(default_factory=set)

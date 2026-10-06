@@ -9,9 +9,16 @@ class ClientMessage:
 
     @classmethod
     def from_dict(cls, message: dict[str, Any]) -> "ClientMessage":
+        if not isinstance(message, dict):
+            return cls(type="", data={})
+
+        data = message.get("data", {})
+        if not isinstance(data, dict):
+            data = {}
+
         return cls(
-            type=message.get("type", ""),
-            data=message.get("data", {}),
+            type=str(message.get("type", "")),
+            data=data,
         )
 
 
@@ -41,11 +48,7 @@ def system_message(message: str) -> dict[str, Any]:
     ).to_dict()
 
 
-def chat_message(
-    pid: str,
-    name: str,
-    message: str,
-) -> dict[str, Any]:
+def chat_message(pid: str, name: str, message: str) -> dict[str, Any]:
     return ServerMessage(
         type="chat",
         data={
@@ -69,8 +72,34 @@ def player_left(pid: str) -> dict[str, Any]:
         data={"pid": pid},
     ).to_dict()
 
+
 def game_state_message(state: str) -> dict[str, Any]:
     return ServerMessage(
         type="game_state",
         data={"state": state},
     ).to_dict()
+
+
+def word_options_message(options: list[dict[str, Any]]) -> dict[str, Any]:
+    return ServerMessage(
+        type="word_options",
+        data={"options": options},
+    ).to_dict()
+
+
+def timer_message(seconds: int, phase: str) -> dict[str, Any]:
+    return ServerMessage(
+        type="timer",
+        data={
+            "seconds": max(0, int(seconds)),
+            "phase": phase,
+        },
+    ).to_dict()
+
+
+def leaderboard_message(players: list[dict[str, Any]]) -> dict[str, Any]:
+    return ServerMessage(
+        type="leaderboard",
+        data={"players": players},
+    ).to_dict()
+

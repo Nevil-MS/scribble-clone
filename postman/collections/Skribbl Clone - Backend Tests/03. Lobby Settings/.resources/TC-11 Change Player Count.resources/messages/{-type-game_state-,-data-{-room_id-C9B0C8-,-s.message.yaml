@@ -1,0 +1,5 @@
+$kind: websocket-message
+name: '{"type":"game_state","data":{"room_id":"C9B0C8","s'
+content: '{"type":"game_state","data":{"room_id":"C9B0C8","state":"LOBBY","players":[{"pid":"65cc8a4f-7b20-4843-aaf6-7575dc0272c5","name":"Brave183","avatar":"avatar_06","room_id":"C9B0C8","connected":true},{"pid":"2e6b00c6-a8bd-4443-8760-7f0dcbc24841","name":"Sleepy688","avatar":"avatar_06","room_id":"C9B0C8","connected":true},{"pid":"24b14b23-2800-40c4-947d-0550644b1c4d","name":"Mighty219","avatar":"avatar_06","room_id":"C9B0C8","connected":true}],"connected_players":["65cc8a4f-7b20-4843-aaf6-7575dc0272c5","24b14b23-2800-40c4-947d-0550644b1c4d","2e6b00c6-a8bd-4443-8760-7f0dcbc24841"],"settings":{"room_id":"C9B0C8","player_count":3,"language":"English","draw_time":80,"rounds":3,"word_count":3,"hints":2,"custom_words":[],"custom_words_only":false},"host_pid":"65cc8a4f-7b20-4843-aaf6-7575dc0272c5","current_drawer":null,"current_round":null,"current_turn":null,"word":null,"word_available":false}}'
+contentType: json
+order: 1791379865176

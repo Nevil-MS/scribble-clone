@@ -1,2 +1,3 @@
 $kind: websocket-request
+messages: .resources/TC-11 Change Player Count.resources/messages
 order: 1791373245897

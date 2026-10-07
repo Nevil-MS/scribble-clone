@@ -3,6 +3,8 @@ from __future__ import annotations
 import asyncio
 import uuid
 import random
+import logging
+import time
 from typing import Any
 
 from fastapi import WebSocket, WebSocketDisconnect
@@ -26,6 +28,16 @@ from .messages import (
     leaderboard_message,
 )
 from .websocket import ConnectionManager
+
+# logger
+logging.basicConfig(
+    filename="websocket.log",
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(message)s"
+)
+
+logger = logging.getLogger(__name__)
+
 
 
 class RoomManager:
@@ -58,6 +70,7 @@ _word_selection_tasks: dict[str, asyncio.Task] = {}
 _phase_tasks: dict[str, asyncio.Task] = {}
 _hint_tasks: dict[str, list[asyncio.Task]] = {}
 _disconnect_tasks: dict[tuple[str, str], asyncio.Task] = {}
+_chat_timestamps: dict[tuple[str, str], list[float]] = {}
 
 # Player profile defaults
 AVATAR_IDS = [
@@ -82,6 +95,9 @@ RANDOM_NAME_PARTS = [
     "Sunny",
 ]
 
+MAX_PLAYER_NAME_LENGTH = 18
+CHAT_MAX_MESSAGES = 5
+CHAT_WINDOW_SECONDS = 3
 
 # ----------------------------
 # Basic helpers
@@ -165,6 +181,27 @@ def visible_word_for(game: Game, pid: str) -> str | None:
         return None
 
     return game_engine(game).get_word_pattern()
+
+
+
+def is_chat_spam(room_id: str, pid: str) -> bool:
+    now = time.monotonic()
+    key = (room_id, pid)
+
+    timestamps = _chat_timestamps.setdefault(key, [])
+
+    timestamps[:] = [
+        timestamp
+        for timestamp in timestamps
+        if now - timestamp < CHAT_WINDOW_SECONDS
+    ]
+
+    if len(timestamps) >= CHAT_MAX_MESSAGES:
+        return True
+
+    timestamps.append(now)
+    return False
+
 
 
 def serialize_player(player: Player) -> dict[str, Any]:
@@ -379,6 +416,13 @@ async def handle_join(game: Game, pid: str, data: dict[str, Any]):
 
     name = str(data.get("name", "")).strip()
     avatar = str(data.get("avatar", "")).strip()
+
+    if len(name) > MAX_PLAYER_NAME_LENGTH:
+        await send_error(
+            pid,
+            f"Player name cannot exceed {MAX_PLAYER_NAME_LENGTH} characters."
+        )
+        return
 
     if not name:
         name = generate_random_name()
@@ -595,6 +639,10 @@ async def handle_chat(game: Game, pid: str, data: dict[str, Any]):
 
     message = str(data.get("message", "")).strip()
     if not message:
+        return
+
+    if is_chat_spam(game.room_id, pid):
+        await send_error(pid, "You are sending messages too quickly.")
         return
 
     if game.state != GameState.PLAYING or game.current_turn is None:
@@ -858,6 +906,21 @@ async def advance_after_turn(game: Game):
                 await send_leaderboard(game)
                 await send_game_state(game)
 
+                for remaining in range(7, 0, -1):
+                    if game.state != GameState.GAME_END:
+                        return
+
+                    await connection_manager.send_to_players(
+                        game.connected_players,
+                        timer_message(remaining, "leaderboard"),
+                    )
+
+                    await asyncio.sleep(1)
+
+                # Return the existing room to the lobby
+                engine.reset_to_lobby()
+                await send_game_state(game)
+
     except asyncio.CancelledError:
         return
 
@@ -964,7 +1027,7 @@ async def handle_start_game(game: Game, pid: str):
         await send_error(pid, "The game has already started.")
         return
 
-    if len(game.connected_players) < game.settings.player_count:
+    if len(game.connected_players) < 2:
         await send_error(pid, "Not enough players to start the game.")
         return
 
@@ -1159,6 +1222,14 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
 
         while True:
             message = await websocket.receive_json()
+
+            logger.info(
+                "RECEIVED | room=%s | pid=%s | %s",
+                room_id,
+                pid,
+                message
+            )
+
             await handle_message(game, pid, message)
 
     except WebSocketDisconnect:

@@ -1,5 +1,7 @@
 from fastapi import WebSocket
+import logging
 
+logger = logging.getLogger(__name__)
 
 class ConnectionManager:
     def __init__(self):
@@ -33,6 +35,12 @@ class ConnectionManager:
             return
 
         try:
+            logger.info(
+                "SENT | pid=%s | %s",
+                pid,
+                message
+            )
+
             await websocket.send_json(message)
         except Exception:
             self.disconnect(pid)

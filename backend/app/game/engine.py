@@ -468,3 +468,18 @@ class GameEngine:
 
         # Return the updated word pattern
         return self.get_word_pattern()
+
+        def reset_to_lobby(self):
+            self.game.state = GameState.LOBBY
+
+            self.game.turn_order = []
+            self.game.current_turn_index = 0
+
+            self.game.word_pool = []
+            self.game.current_word_options = []
+
+            self.game.current_round = None
+            self.game.current_turn = None
+            self.game.guesses = {}
+
+            self.game.leaderboard = {}

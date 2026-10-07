@@ -39,12 +39,12 @@ async def create_room(
 
     settings = GameSettings(
         room_id=room_id,
-        player_count=2,
-        language="English",
-        draw_time=60,
+        player_count=3,
+        language="en",
+        draw_time=80,
         rounds=3,
         word_count=3,
-        hints=0,
+        hints=2,
         custom_words=[],
         custom_words_only=False,
     )

@@ -53,7 +53,10 @@ class GameEngine:
 
 
     def handle_disconnect(self, pid: str):
-        if len(self.game.connected_players) < 2:
+        if (
+            len(self.game.connected_players) < 2
+            and self.game.state != GameState.LOBBY
+        ):
             self.game.state = GameState.GAME_END
             return
 
@@ -368,6 +371,41 @@ class GameEngine:
         # points by guessing during the current turn
         if self.game.current_turn is not None:
             self.game.current_turn.points_awarded[pid] = 0
+
+
+
+    def remove_player(self, pid: str):
+        """Permanently remove a player after their disconnect grace period."""
+
+        if pid not in self.game.players:
+            return
+
+        # Remember the player's position before removing them.
+        removed_index = (
+            self.game.turn_order.index(pid)
+            if pid in self.game.turn_order
+            else None
+        )
+
+        # Permanently remove the player from the game.
+        del self.game.players[pid]
+
+        # Remove them from future turn progression.
+        if removed_index is not None:
+            self.game.turn_order.remove(pid)
+
+            # If the removed player was before the current player,
+            # shift the current index back to keep pointing to
+            # the same current player.
+            if removed_index < self.game.current_turn_index:
+                self.game.current_turn_index -= 1
+
+        # Remove their leaderboard entry.
+        self.game.leaderboard.pop(pid, None)
+
+        # Remove their current-turn point tracking.
+        if self.game.current_turn is not None:
+            self.game.current_turn.points_awarded.pop(pid, None)
 
 
 

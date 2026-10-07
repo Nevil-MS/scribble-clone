@@ -1,2 +1,10 @@
 name: New Environment
-values: []
+values:
+  - key: base_url
+    value: ''
+  - key: room_id
+    value: ''
+  - key: host_pid
+    value: ''
+  - key: player_pid
+    value: ''

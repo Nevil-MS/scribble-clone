@@ -1,6 +1,0 @@
-$kind: websocket-request
-description: ""
-url: ws://127.0.0.1:8000/ws/824AC3
-settings: {}
-messages: .resources/TC-04 Player 2 Joins.resources/messages
-order: 4215763608738500

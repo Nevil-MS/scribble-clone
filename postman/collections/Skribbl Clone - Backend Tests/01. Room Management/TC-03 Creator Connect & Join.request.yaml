@@ -1,5 +1,8 @@
 $kind: websocket-request
 description: ""
-url: ""
+url: ws://127.0.0.1:8000/ws/714AA9?pid=ec0edcb0-5455-44ca-bf54-45683a5bb77f
+queryParams:
+  pid: ec0edcb0-5455-44ca-bf54-45683a5bb77f
 settings: {}
+messages: .resources/TC-03 Creator Connect & Join.resources/messages
 order: 4187093045788246

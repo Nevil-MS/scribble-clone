@@ -1,0 +1,5 @@
+$kind: websocket-request
+description: ""
+url: ws://127.0.0.1:8000/ws/{{room_id}}
+settings: {}
+order: 4482539784002817

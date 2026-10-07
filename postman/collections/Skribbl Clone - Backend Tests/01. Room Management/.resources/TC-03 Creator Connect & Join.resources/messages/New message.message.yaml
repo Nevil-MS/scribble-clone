@@ -1,0 +1,10 @@
+$kind: websocket-message
+content: "{\r
+
+  \  \"type\": \"join\",\r
+
+  \  \"data\": {}\r
+
+  }"
+contentType: text
+order: 1791346388624

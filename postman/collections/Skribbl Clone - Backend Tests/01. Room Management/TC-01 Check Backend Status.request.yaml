@@ -1,4 +1,4 @@
 $kind: http-request
-url: ""
+url: http://127.0.0.1:8000
 method: GET
 order: 1791286245888

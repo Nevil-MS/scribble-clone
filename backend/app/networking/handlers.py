@@ -1078,10 +1078,45 @@ async def permanent_remove_player(game: Game, pid: str):
 
     was_host = game.host_pid == pid
 
-    # Permanently remove the player from this room/game.
-    game_engine(game).remove_player(pid)
+    engine = game_engine(game)
 
-    # If the host somehow reaches permanent removal while the room
+    # Check whether this player is the current drawer BEFORE
+    # permanently removing their scoring/player data.
+    is_current_drawer = (
+        game.current_turn is not None
+        and current_drawer_pid(game) == pid
+        and game.state in {
+            GameState.WORD_SELECTION,
+            GameState.PLAYING
+        }
+    )
+
+    # If the disconnected player was the drawer, end their turn first.
+    # This gives the drawer 0 artist points and creates the normal
+    # TURN_END result before their player data is removed.
+    if is_current_drawer:
+        turn_end_result = engine.end_turn("DRAWER_DISCONNECTED")
+
+        await connection_manager.send_to_players(
+            game.connected_players,
+            system_message(
+                f"{player.name} did not reconnect. "
+                "The turn has ended."
+            ),
+        )
+
+        # Permanently remove the player after the turn result
+        # has been calculated.
+        engine.remove_player(pid)
+
+        # Show the normal turn-end screen/leaderboard.
+        await finish_turn(game, turn_end_result)
+
+    else:
+        # Normal permanent removal for a non-drawer.
+        engine.remove_player(pid)
+
+    # If the host reaches permanent removal while the room
     # still exists, assign an active player as the new host.
     if was_host and game.connected_players:
         game.host_pid = next(iter(game.connected_players))

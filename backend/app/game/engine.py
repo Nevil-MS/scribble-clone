@@ -53,13 +53,8 @@ class GameEngine:
 
 
     def handle_disconnect(self, pid: str):
-        if (
-            len(self.game.connected_players) < 2
-            and self.game.state != GameState.LOBBY
-        ):
-            self.game.state = GameState.GAME_END
-            return
-
+        # If the disconnected player is the current drawer,
+        # let the 15-second reconnect grace period handle it.
         if (
             self.game.current_turn
             and pid == self.game.current_turn.drawer_pid
@@ -68,8 +63,18 @@ class GameEngine:
                 GameState.PLAYING
             }
         ):
-            return self.end_turn("DRAWER_DISCONNECTED")
+            return "CONTINUE"
 
+        # If too few players remain connected, end the game.
+        if (
+            len(self.game.connected_players) < 2
+            and self.game.state != GameState.LOBBY
+        ):
+            self.game.state = GameState.GAME_END
+            return "GAME_END"
+
+        # If all remaining guessers are already correct,
+        # the current turn can end normally.
         if (
             self.game.state == GameState.PLAYING
             and self.all_guessers_correct()
@@ -302,9 +307,13 @@ class GameEngine:
     
 
     def end_turn(self, reason: str):
-        artist_points = self.calculate_artist_points()
-
         drawer_pid = self.game.current_turn.drawer_pid
+
+        if reason == "DRAWER_DISCONNECTED":
+            artist_points = 0
+        else:
+            artist_points = self.calculate_artist_points()
+
         self.add_points(drawer_pid, artist_points)
 
         self.game.state = GameState.TURN_END
@@ -314,7 +323,6 @@ class GameEngine:
             "reason": reason,
             "points_awarded": self.game.current_turn.points_awarded
         }
-
 
 
     def next_turn(self):
@@ -394,10 +402,9 @@ class GameEngine:
         if removed_index is not None:
             self.game.turn_order.remove(pid)
 
-            # If the removed player was before the current player,
-            # shift the current index back to keep pointing to
-            # the same current player.
-            if removed_index < self.game.current_turn_index:
+            # If the removed player was at or before the current
+            # turn index, shift the index back to keep it valid.
+            if removed_index <= self.game.current_turn_index:
                 self.game.current_turn_index -= 1
 
         # Remove their leaderboard entry.

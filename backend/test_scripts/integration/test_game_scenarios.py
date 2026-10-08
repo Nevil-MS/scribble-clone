@@ -1157,9 +1157,10 @@ async def test_guesser_disconnect():
 
 async def test_drawer_disconnect():
     """
-    TC-44: When the drawer disconnects during a turn, the remaining
-           players are notified and the game state transitions to
-           TURN_END (turn terminates due to drawer disconnect).
+    TC-44: When the drawer disconnects during a turn, remaining players
+           are notified. The drawer is granted a 15-second grace period
+           to reconnect. If the grace period expires without reconnection,
+           the turn terminates due to drawer departure (transitions to TURN_END).
     """
     print("\n=== TC-44 ===")
 
@@ -1167,7 +1168,7 @@ async def test_drawer_disconnect():
 
     try:
         _, players, host = await setup_game(
-            draw_time=10,
+            draw_time=30,
             rounds=1,
             word_count=1,
             hints=0,
@@ -1194,14 +1195,11 @@ async def test_drawer_disconnect():
 
         print("TC-44: Disconnect notification received.")
 
-        # The turn should end because the drawer disconnected.
-        # The backend transitions to TURN_END state.
-        # NOTE: Due to a known backend behavior, the turn_end event
-        # may not be broadcast separately; instead a TURN_END
-        # game_state is sent directly.
+        # After the 15-second grace period expires without reconnection,
+        # the turn terminates due to drawer departure.
         turn_over = await guessers[0].wait_for(
             "game_state",
-            timeout=5,
+            timeout=25,
             predicate=lambda m:
                 m["data"].get("state") == "TURN_END"
                 or m["data"].get("event") == "turn_end",
@@ -1216,12 +1214,209 @@ async def test_drawer_disconnect():
             f"Unexpected game state after drawer disconnect: {turn_over}"
         )
 
-        print("TC-44: Turn terminated after drawer disconnect.")
+        print("TC-44: Turn terminated after drawer disconnect grace expiration.")
         print("TC-44 PASSED.")
 
     finally:
         for player in players:
             await player.close()
+
+
+# ============================================================
+# Artist Permanently Leaves During Active Turn
+# ============================================================
+
+async def test_artist_permanently_leaves_during_turn():
+    """
+    Artist Permanently Leaves During Active Turn.
+
+    Purpose:
+    Verify the complete lifecycle when the current artist/drawer disconnects and never
+    reconnects:
+    1. Reconnect grace period:
+       - Artist disconnect triggers 15-second reconnect grace period.
+       - Disconnect notice broadcast to players.
+       - Turn remains active in PLAYING allowing possible reconnection.
+    2. Grace expiration & permanent removal:
+       - After 15 seconds without reconnection, backend calls permanent_remove_player().
+       - Turn terminates with reason 'DRAWER_DISCONNECTED'.
+       - Artist is permanently removed from active players and future turn order.
+       - Remaining players receive 'player_left' notification.
+       - Next valid turn begins with a new drawer from remaining connected players.
+       - New drawer can select a word, transition to PLAYING, and continue normal gameplay.
+    """
+    print("\n=== Artist Permanently Leaves During Active Turn ===")
+
+    players = []
+    try:
+        # 1. Setup room with 3 players and 2 rounds so game doesn't end after turn 1
+        room, players, host = await setup_game(
+            player_count=3,
+            draw_time=45,
+            rounds=2,
+            word_count=1,
+            hints=0,
+        )
+        print(f"Artist Departure Test: Created room {room['room_id']} with 3 players.")
+
+        # 2. Start game
+        await host.start_game()
+
+        # Wait for WORD_SELECTION
+        ws_states = await asyncio.gather(
+            *[p.wait_for_state("WORD_SELECTION", timeout=15) for p in players]
+        )
+        drawer_pid = ws_states[0]["data"]["current_drawer"]
+        drawer = next(p for p in players if p.pid == drawer_pid)
+        guessers = [p for p in players if p.pid != drawer_pid]
+
+        print(f"Artist Departure Test: Turn 1 Drawer: {drawer.name} ({drawer.pid})")
+        print(f"Artist Departure Test: Turn 1 Guessers: {[g.name for g in guessers]}")
+
+        # 3. Drawer selects word to transition into PLAYING
+        opt_msg = await drawer.wait_for("word_options", timeout=10)
+        options = opt_msg["data"]["options"]
+        await drawer.select_word(options[0]["word_id"])
+
+        # All players reach PLAYING
+        await asyncio.gather(
+            *[p.wait_for_state("PLAYING", timeout=10) for p in players]
+        )
+        print("Artist Departure Test: Game successfully entered PLAYING state.")
+
+        # 4. Artist disconnects (closes WebSocket connection)
+        print(f"Artist Departure Test: Closing artist WebSocket connection ({drawer.name})...")
+        await drawer.close()
+
+        # 5. Verify disconnect notification received and game remains in PLAYING during grace period
+        sys_msgs = await asyncio.gather(
+            *[
+                g.wait_for(
+                    "system_message",
+                    timeout=5,
+                    predicate=lambda m: "reconnect" in m["data"]["message"].lower(),
+                )
+                for g in guessers
+            ]
+        )
+        assert len(sys_msgs) == len(guessers)
+        print("Artist Departure Test: Confirmed disconnect grace notice received by remaining players.")
+
+        # 6. Await 15-second grace period expiration; turn terminates and player_left emitted
+        print("Artist Departure Test: Awaiting disconnect grace period expiration (~15 seconds)...")
+        turn_end_events = await asyncio.gather(
+            *[g.wait_for_event("turn_end", timeout=25) for g in guessers]
+        )
+        for ev in turn_end_events:
+            assert ev["data"]["reason"] == "DRAWER_DISCONNECTED", (
+                f"Expected reason 'DRAWER_DISCONNECTED', got: {ev['data'].get('reason')}"
+            )
+        print("Artist Departure Test: Confirmed turn_end event with reason 'DRAWER_DISCONNECTED' received by guessers.")
+
+        left_events = await asyncio.gather(
+            *[
+                g.wait_for(
+                    "player_left",
+                    timeout=10,
+                    predicate=lambda m: m.get("data", {}).get("pid") == drawer.pid,
+                )
+                for g in guessers
+            ]
+        )
+        for ev in left_events:
+            assert ev["data"]["pid"] == drawer.pid
+        print(f"Artist Departure Test: Confirmed 'player_left' event for artist ({drawer.pid}) received by all remaining players.")
+
+        # 7. Verify artist is permanently removed from game state and remaining players list
+        removal_states = await asyncio.gather(
+            *[
+                g.wait_for(
+                    "game_state",
+                    timeout=10,
+                    predicate=lambda m: "players" in m.get("data", {}) and drawer.pid not in [p["pid"] for p in m["data"]["players"]],
+                )
+                for g in guessers
+            ]
+        )
+        remaining_player_list = removal_states[0]["data"]["players"]
+        remaining_pids = [p["pid"] for p in remaining_player_list]
+
+        assert drawer.pid not in remaining_pids, "Artist is still present in players list after removal!"
+        assert len(remaining_pids) == 2, f"Expected exactly 2 players remaining, got {len(remaining_pids)}"
+        for g in guessers:
+            assert g.pid in remaining_pids, f"Remaining guesser {g.name} missing from player list"
+        print(f"Artist Departure Test: Confirmed artist removed from player list. Remaining players: {remaining_pids}")
+
+        # 8. Verify game continues to the next valid turn and enters WORD_SELECTION
+        ws_states_turn2 = await asyncio.gather(
+            *[
+                g.wait_for_state(
+                    "WORD_SELECTION",
+                    timeout=20,
+                    predicate=lambda m: m.get("data", {}).get("current_drawer") != drawer.pid,
+                )
+                for g in guessers
+            ]
+        )
+        new_drawer_pid = ws_states_turn2[0]["data"]["current_drawer"]
+        assert new_drawer_pid != drawer.pid, "Removed artist was assigned as new drawer!"
+        assert new_drawer_pid in [g.pid for g in guessers], "New drawer is not one of the remaining players!"
+
+        new_drawer = next(g for g in guessers if g.pid == new_drawer_pid)
+        remaining_guesser = next(g for g in guessers if g.pid != new_drawer_pid)
+        print(f"Artist Departure Test: Next turn started! New drawer: {new_drawer.name} ({new_drawer.pid})")
+
+        # 9. New drawer receives word options and selects a word
+        opt_msg2 = await new_drawer.wait_for("word_options", timeout=10)
+        options2 = opt_msg2["data"]["options"]
+        assert len(options2) >= 1, "New drawer received no word options"
+        await new_drawer.select_word(options2[0]["word_id"])
+        print(f"Artist Departure Test: New drawer selected word '{options2[0]['word']}'.")
+
+        # 10. Verify game reaches PLAYING again
+        playing_states_turn2 = await asyncio.gather(
+            new_drawer.wait_for_state(
+                "PLAYING",
+                timeout=10,
+                predicate=lambda m: m.get("data", {}).get("current_drawer") == new_drawer.pid,
+            ),
+            remaining_guesser.wait_for_state(
+                "PLAYING",
+                timeout=10,
+                predicate=lambda m: m.get("data", {}).get("current_drawer") == new_drawer.pid,
+            ),
+        )
+        assert playing_states_turn2[0]["data"]["state"] == "PLAYING"
+        print("Artist Departure Test: Game successfully reached PLAYING for the new turn.")
+
+        # 11. Verify remaining players interact normally
+        # New drawer draws
+        await new_drawer.draw(action="stroke", x=75, y=125, color="#0000FF", size=5)
+        draw_msg = await remaining_guesser.wait_for(
+            "draw",
+            timeout=5,
+            predicate=lambda m: m.get("data", {}).get("action") == "stroke",
+        )
+        assert draw_msg["data"]["pid"] == new_drawer.pid
+        assert draw_msg["data"]["x"] == 75
+        assert draw_msg["data"]["y"] == 125
+        print("Artist Departure Test: Drawing stroke by new drawer received by guesser.")
+
+        # Guesser sends chat
+        await remaining_guesser.chat("Nice line!")
+        chat_msg = await new_drawer.wait_for(
+            "chat",
+            timeout=5,
+            predicate=lambda m: m.get("data", {}).get("message") == "Nice line!",
+        )
+        assert chat_msg["data"]["pid"] == remaining_guesser.pid
+        print("Artist Departure Test: Chat message from guesser received by new drawer.")
+
+        print("Artist Permanently Leaves During Active Turn PASSED.")
+
+    finally:
+        for p in players:
+            await p.close()
 
 
 # ============================================================

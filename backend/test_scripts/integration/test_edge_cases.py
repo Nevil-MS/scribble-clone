@@ -757,6 +757,135 @@ async def test_tc62_multiple_rooms():
 
 
 # ============================================================
+# Additional Edge Case: Custom-Word Payload Robustness
+# ============================================================
+
+async def test_custom_word_payload_robustness():
+    """
+    Custom-Word Payload Robustness.
+
+    Purpose:
+    Verify that a modified or untrusted frontend cannot crash, poison, or destabilize
+    the backend by sending currently-unused custom-word settings fields (custom_words,
+    custom_words_only) with malformed/unusual values.
+
+    Scenario:
+    1. Create a fresh room and verify normal players reach LOBBY.
+    2. As host, send a WebSocket lobby_update with malformed/unusual custom_words
+       (e.g., inappropriate non-list string / dictionary) and custom_words_only=True.
+    3. Verify backend handles the payload safely (either accepted or rejected with a
+       controlled error; no unhandled exception, no socket crash, no server death).
+    4. Send a completely valid lobby update (draw_time=50) and verify it succeeds.
+    5. Verify WebSocket connection remains healthy and operational.
+    6. Start the game and confirm normal database-backed word selection and gameplay
+       work without state corruption.
+    """
+    print("\n=== Custom-Word Payload Robustness ===")
+
+    players = []
+    try:
+        # 1. Setup room with 2 players
+        room, players, host = await setup_game(player_count=2, draw_time=30, rounds=1)
+        guest = players[1]
+
+        # Verify both players in LOBBY
+        host_lobby = await host.wait_for_state("LOBBY", timeout=5)
+        assert host_lobby["data"]["state"] == "LOBBY"
+        print(f"Custom-Word Test: Room {room['room_id']} initialized in LOBBY.")
+
+        # 2. Send malformed/unusual custom_words payload
+        # GameSettings expects custom_words: list[str], custom_words_only: bool.
+        # We test with non-list string type and custom_words_only=True.
+        malformed_payload = {
+            "custom_words": "MALFORMED_NON_LIST_STRING_VALUE",
+            "custom_words_only": True,
+        }
+        print("Custom-Word Test: Sending malformed custom-word payload from host:", malformed_payload)
+        await host.send("lobby_update", malformed_payload)
+
+        # 3. Observe backend response: either controlled error or accepted settings
+        # Neither should crash the connection or the backend.
+        error_task = asyncio.create_task(host.wait_for("error", timeout=3))
+        state_task = asyncio.create_task(host.wait_for("game_state", timeout=3))
+        done, pending = await asyncio.wait(
+            [error_task, state_task],
+            return_when=asyncio.FIRST_COMPLETED,
+        )
+        for t in pending:
+            t.cancel()
+        response_msg = next(iter(done)).result()
+        msg_type = response_msg.get("type")
+        if msg_type == "error":
+            print("Custom-Word Test: Backend rejected malformed custom-word payload with controlled error:", response_msg["data"])
+        else:
+            settings_data = response_msg.get("data", {}).get("settings", {})
+            print("Custom-Word Test: Backend accepted custom-word settings fields without crashing:", {
+                "custom_words": settings_data.get("custom_words"),
+                "custom_words_only": settings_data.get("custom_words_only"),
+            })
+
+        # 4. Verify connection is still alive by sending a valid lobby update
+        await host.lobby_update(draw_time=50)
+        state_after_valid = await host.wait_for_state(
+            "LOBBY",
+            timeout=5,
+            predicate=lambda m: m.get("data", {}).get("settings", {}).get("draw_time") == 50,
+        )
+        assert state_after_valid["data"]["settings"]["draw_time"] == 50, (
+            f"Expected draw_time=50, got {state_after_valid['data']['settings']['draw_time']}"
+        )
+        print("Custom-Word Test: Subsequent valid lobby_update(draw_time=50) succeeded normally.")
+
+        # Also verify guest received the updated state
+        guest_state = await guest.wait_for_state(
+            "LOBBY",
+            timeout=5,
+            predicate=lambda m: m.get("data", {}).get("settings", {}).get("draw_time") == 50,
+        )
+        assert guest_state["data"]["settings"]["draw_time"] == 50
+        print("Custom-Word Test: Guest player received synchronized state update.")
+
+        # 5. Start game to verify game state was not poisoned and database word pool works
+        await host.start_game()
+        ws_states = await asyncio.gather(
+            *[p.wait_for_state("WORD_SELECTION", timeout=15) for p in players]
+        )
+        drawer_pid = ws_states[0]["data"]["current_drawer"]
+        drawer = next(p for p in players if p.pid == drawer_pid)
+        guesser = next(p for p in players if p.pid != drawer_pid)
+
+        opt_msg = await drawer.wait_for("word_options", timeout=10)
+        options = opt_msg["data"]["options"]
+        assert len(options) >= 1, "Expected word options from DB word pool"
+        print(f"Custom-Word Test: DB word selection active with {len(options)} options: {[o['word'] for o in options]}")
+
+        # Drawer selects word; game enters PLAYING
+        selected_word = options[0]["word"]
+        await drawer.select_word(options[0]["word_id"])
+
+        await asyncio.gather(
+            *[p.wait_for_state("PLAYING", timeout=10) for p in players]
+        )
+        print(f"Custom-Word Test: Game successfully entered PLAYING state for word '{selected_word}'.")
+
+        # Confirm drawing interaction works normally
+        await drawer.draw(action="stroke", x=100, y=100)
+        draw_event = await guesser.wait_for(
+            "draw",
+            timeout=5,
+            predicate=lambda m: m.get("data", {}).get("action") == "stroke",
+        )
+        assert draw_event["data"]["pid"] == drawer.pid
+        print("Custom-Word Test: In-game drawing verified without corruption.")
+
+        print("Custom-Word Payload Robustness PASSED.")
+
+    finally:
+        for p in players:
+            await p.close()
+
+
+# ============================================================
 # Main Runner for Edge Cases
 # ============================================================
 

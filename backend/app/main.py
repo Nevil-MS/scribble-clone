@@ -1,5 +1,6 @@
 from fastapi import FastAPI, WebSocket
-
+from fastapi.middleware.cors import CORSMiddleware
+import os
 from .networking.handlers import (
     room_manager,
     websocket_endpoint,
@@ -11,8 +12,20 @@ from .networking.handlers import (
 from .models.gamesettings import GameSettings
 from .models.player import Player
 
-app = FastAPI(
-    title="Skribbl Clone Backend",
+
+app = FastAPI(title="Skribbl Clone Backend")
+
+origins = os.getenv(
+    "CORS_ORIGINS",
+    "http://localhost:5173,http://127.0.0.1:5173"
+).split(",")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],   
 )
 
 

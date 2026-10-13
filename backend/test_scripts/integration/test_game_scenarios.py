@@ -1540,6 +1540,7 @@ async def test_late_player():
 
         for player in players:
             await player.join()
+            await player.wait_for_state("LOBBY", timeout=5)
 
         # Start with only 2 players; room is configured for 3.
         await configure_lobby(

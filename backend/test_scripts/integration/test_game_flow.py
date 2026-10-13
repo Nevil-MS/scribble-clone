@@ -165,13 +165,14 @@ async def run_turn(
         y=100,
     )
 
-    draw_message = await guessers[0].wait_for(
-        "draw",
-        timeout=5,
-    )
+    for guesser in guessers:
+        draw_message = await guesser.wait_for(
+            "draw",
+            timeout=5,
+        )
 
-    assert draw_message["data"]["pid"] == drawer.pid
-    assert draw_message["data"]["action"] == "stroke"
+        assert draw_message["data"]["pid"] == drawer.pid
+        assert draw_message["data"]["action"] == "stroke"
 
     print("Drawing broadcast confirmed.")
 
@@ -335,12 +336,10 @@ async def main():
             timeout=5,
         )
 
-        # Final leaderboard timer.
-        await asyncio.sleep(8)
-
+        # Server returns to LOBBY after the final 7s leaderboard countdown.
         lobby = await first_drawer.wait_for_state(
             "LOBBY",
-            timeout=5,
+            timeout=15,
         )
 
         assert lobby["data"]["state"] == "LOBBY"

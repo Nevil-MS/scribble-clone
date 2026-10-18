@@ -6,6 +6,7 @@ function GameStatusBar({
   totalRounds = 3,
   status = "waiting",
   timeRemaining = null,
+  wordPattern = null,
 }) {
   return (
     <div className="game-status-bar">
@@ -23,8 +24,8 @@ function GameStatusBar({
       </div>
 
       <div className="game-status">
-        {status}
-      </div>
+  {wordPattern || status}
+</div>
 
       <div className="right-info">
         <button className="settings-btn">

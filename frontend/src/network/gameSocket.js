@@ -4,7 +4,7 @@ const BACKEND_URL =
 const WS_URL = BACKEND_URL.replace(/^http/, "ws");
 
 /**
- * Frontend ↔ Backend WebSocket interface.
+ * Frontend â†” Backend WebSocket interface.
  *
  * The networking implementation can change internally,
  * but GamePage/LobbyPage should only depend on this API.
@@ -37,7 +37,7 @@ export function connectGameSocket({
     try {
       const message = JSON.parse(event.data);
 
-      console.log("Server → Frontend:", message);
+      console.log("Server â†’ Frontend:", message);
 
       onMessage?.(message);
     } catch (error) {

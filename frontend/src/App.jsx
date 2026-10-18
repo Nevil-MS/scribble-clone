@@ -31,6 +31,7 @@ function App() {
 
             setPlayerName(name);
             setRoomId(data.room_id);
+            setPlayerPid(data.pid);
             setPage("lobby");
         } catch (error) {
             console.error(
@@ -75,6 +76,7 @@ function App() {
             <LobbyPage
                 roomId={roomId}
                 playerName={playerName}
+                pid={playerPid}
                 onGameStart={handleGameStart}
             />
         );

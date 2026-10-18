@@ -187,7 +187,7 @@ function GamePage({ playerName, roomId, pid }) {
 
           connection.send("join", {
             name: playerName,
-            avatar: "default",
+            avatar: "avatar_01",
           });
 
           return;
@@ -254,7 +254,10 @@ function GamePage({ playerName, roomId, pid }) {
 
           return;
         }
-
+        if (message.type === "draw") {
+          canvasRef.current?.drawRemoteStroke(message.data);
+          return;
+        }
         /*
          * Player joined.
          *
@@ -437,6 +440,8 @@ function GamePage({ playerName, roomId, pid }) {
           totalRounds={totalRounds}
           status={gameStatus}
           timeRemaining={timeRemaining}
+          wordPattern={wordPattern}
+
         />
 
         <div className="game-content">
@@ -453,6 +458,8 @@ function GamePage({ playerName, roomId, pid }) {
                 color={color}
                 size={size}
                 tool={tool}
+                isDrawer={isDrawer}
+
 
                 onStroke={handleStroke}
 
@@ -483,12 +490,11 @@ function GamePage({ playerName, roomId, pid }) {
               )}
 
               {gameState === "points" && (
-                <PointsOverlay />
-              )}
-
-              {gameState === "leaderboard" && (
-                <Leaderboard />
-              )}
+  <PointsOverlay players={players} word={word} />
+)}
+{gameState === "leaderboard" && (
+  <Leaderboard players={players} />
+)}
 
             </div>
 
@@ -501,7 +507,10 @@ function GamePage({ playerName, roomId, pid }) {
               size={size}
               setSize={setSize}
               onUndo={() => canvasRef.current?.undo()}
-              onClear={() => canvasRef.current?.clearCanvas()}
+              onClear={() => {
+                canvasRef.current?.clearCanvas();
+                socketRef.current?.send("draw", { type: "clear" });
+}}
             />
 
           </div>

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { connectGameSocket } from "../network/gameSocket";
 import GameTitle from "../components/GameTitle";
 import GameStatusBar from "../components/GameStatusBar";
@@ -7,7 +7,9 @@ import LobbySettings from "../components/LobbySettings";
 import PlayerList from "../components/PlayerList";
 import "./LobbyPage.css";
 
-function LobbyPage({ roomId, playerName, onGameStart }) {
+function LobbyPage({ roomId, playerName, pid, onGameStart }) {
+    const [players, setPlayers] = useState([]);
+    const [messages, setMessages] = useState([]);
     const pidRef = useRef(null);
     const socketRef = useRef(null);
     const pendingSettingsRef = useRef(null);
@@ -19,6 +21,7 @@ function LobbyPage({ roomId, playerName, onGameStart }) {
 
         const connection = connectGameSocket({
             roomId,
+            pid,
 
             onOpen: () => {
                 console.log("Lobby WebSocket connected:", roomId);
@@ -37,7 +40,7 @@ function LobbyPage({ roomId, playerName, onGameStart }) {
 
                     connection.send("join", {
                         name: playerName,
-                        avatar: "default",
+                        avatar: "avatar_01",
                     });
 
                     return;
@@ -45,6 +48,19 @@ function LobbyPage({ roomId, playerName, onGameStart }) {
 
                 if (message.type === "game_state") {
                     const data = message.data;
+                    if (data.players) {
+    setPlayers(
+        data.players.map((player) => ({
+            id: player.pid,
+            name: player.name,
+            points: player.points ?? 0,
+            initials: player.name
+                .slice(0, 2)
+                .toUpperCase(),
+            avatar: player.avatar,
+        }))
+    );
+}
 
                     console.log(
                         "Lobby game state:",
@@ -75,6 +91,33 @@ function LobbyPage({ roomId, playerName, onGameStart }) {
 
                     return;
                 }
+                if (message.type === "chat") {
+    const chatMessage = message.data;
+
+    setMessages((previous) => [
+        ...previous,
+        {
+            id: `${Date.now()}-${chatMessage.pid}`,
+            player: chatMessage.name,
+            text: chatMessage.message,
+        },
+    ]);
+
+    return;
+}
+
+if (message.type === "system_message") {
+    setMessages((previous) => [
+        ...previous,
+        {
+            id: `${Date.now()}-system`,
+            player: "System",
+            text: message.data.message,
+        },
+    ]);
+
+    return;
+}
 
                 if (message.type === "error") {
                     console.error(
@@ -127,6 +170,17 @@ function LobbyPage({ roomId, playerName, onGameStart }) {
         };
     }, [roomId, playerName, onGameStart]);
 
+function handleSendMessage(text) {
+    if (!text.trim()) {
+        return;
+    }
+
+    socketRef.current?.send("chat", {
+        message: text,
+    });
+}
+
+
     function handleStart(settings) {
         console.log("Lobby settings:", settings);
 
@@ -175,13 +229,16 @@ function LobbyPage({ roomId, playerName, onGameStart }) {
 
                 <GameStatusBar />
 
-                <PlayerList />
+                <PlayerList players={players} />
 
                 <LobbySettings
                     onStart={handleStart}
                 />
 
-                <Chat />
+                <Chat
+                    messages={messages}
+                    onSendMessage={handleSendMessage}
+                />
             </div>
         </main>
     );

@@ -1,5 +1,4 @@
-function ChoiceOverlay({ onChoose }) {
-  const words = ["Apple", "Rocket", "Dragon"];
+function ChoiceOverlay({ options, onChoose }) {
 
   return (
     <div
@@ -35,14 +34,15 @@ function ChoiceOverlay({ onChoose }) {
           flexWrap: "wrap",
         }}
       >
-        {words.map((word) => (
-          <button
-            key={word}
-            onClick={() => onChoose(word)}
-          >
-            {word}
-          </button>
-        ))}
+
+{options.map((option) => (
+  <button
+    key={option.word_id}
+    onClick={() => onChoose(option)}
+  >
+    {option.word}
+  </button>
+))}
       </div>
     </div>
   );

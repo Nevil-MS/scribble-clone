@@ -7,12 +7,13 @@ import {
 
 const DrawingCanvas = forwardRef(function DrawingCanvas(
   {
-    round,
-    color = "#000000",
-    size = 5,
-    tool = "pencil",
-    onStroke,
-  },
+  round,
+  color = "#000000",
+  size = 5,
+  tool = "pencil",
+  onStroke,
+  isDrawer = false,
+},
   ref
 ) {
   const canvasRef = useRef(null);
@@ -256,7 +257,43 @@ const DrawingCanvas = forwardRef(function DrawingCanvas(
     }
   }
 
+function drawRemoteStroke(stroke) {
+  if (stroke.type === "clear") {
+  clearCanvas();
+  return;
+}
+  if (stroke.type === "fill") {
+    const filled = floodFill(
+      stroke.x,
+      stroke.y,
+      stroke.color
+    );
+
+    if (filled) {
+      historyRef.current.push({
+        type: "fill",
+        x: stroke.x,
+        y: stroke.y,
+        color: stroke.color,
+      });
+    }
+
+    return;
+  }
+
+  drawStroke(stroke);
+
+  historyRef.current.push({
+    type: "stroke",
+    strokes: [stroke],
+  });
+}
+
+
   function startDrawing(event) {
+    if (!isDrawer) {
+    return;
+  }
     const point = getPoint(event);
 
     if (tool === "fill") {
@@ -292,9 +329,9 @@ const DrawingCanvas = forwardRef(function DrawingCanvas(
   }
 
   function draw(event) {
-    if (!drawingRef.current) {
-      return;
-    }
+  if (!isDrawer || !drawingRef.current) {
+    return;
+  }
 
     const currentPoint = getPoint(event);
     const previousPoint = lastPointRef.current;
@@ -366,10 +403,13 @@ const DrawingCanvas = forwardRef(function DrawingCanvas(
     currentStrokeRef.current = null;
   }
 
-  useImperativeHandle(ref, () => ({
-    undo,
-    clearCanvas,
-  }));
+
+useImperativeHandle(ref, () => ({
+  undo,
+  clearCanvas,
+  drawRemoteStroke,
+}));
+
 
   return (
     <div className="drawing-area">

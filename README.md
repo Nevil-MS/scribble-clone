@@ -1,9 +1,8 @@
-#  Skribbl.io Clone – Online Multiplayer Drawing & Guessing Game
+# 🎨 Skribbl.io Clone – Real-Time Multiplayer Drawing & Guessing Game
 
-A real-time, web-based multiplayer game where one player draws a secret word and everyone else tries to guess it. Players join rooms, chat, earn points based on how fast they guess, and compete on a live leaderboard.
+A web-based multiplayer game where one player draws a secret word and everyone else races to guess it. Players join rooms with a code, chat, earn points for fast guesses, and compete on a live leaderboard.
 
-
-## 📌 Project Overview
+Traditional drawing games need everyone in the same room. This project lets people play together online from anywhere, using only a web browser. No installation is needed. Players just share a room code.
 
 | Item | Details |
 |------|---------|
@@ -11,67 +10,94 @@ A real-time, web-based multiplayer game where one player draws a secret word and
 | **Type** | Real-time multiplayer web game |
 | **Purpose** | Let users draw and guess words together in real time |
 | **Users** | Players and Hosts |
-| **Design Tool** | Figma (low-fidelity wireframes completed) |
-| **Dev Tools** | Visual Studio Code, Git, GitHub |
+| **Design Tool** | Figma (low-fidelity wireframes) |
+| **Dev Tools** | Visual Studio Code, Git, GitHub, Postman |
 
-**Scope:** Users enter a username, pick an avatar, create or join a room, draw and guess words in real time, chat, earn points, and view leaderboards.
+### Aim
+To build a user-friendly multiplayer drawing and guessing game inspired by Skribbl.io.
 
-### Definitions
+### Objectives
+- Build a simple, easy-to-use interface
+- Implement the main game screens (home, lobby, game, results)
+- Support word selection, drawing, guessing, and chat
+- Show scores and rankings on a leaderboard
+- Test every implemented feature
 
-- **Host** – creates and manages the room and its settings
-- **Player** – participates in the game (draws, guesses, chats)
-- **Drawer** – the player currently drawing the chosen word
-- **Round** – one complete drawing turn
-- **Leaderboard** – ranking of players by score
+### Key Terms
+
+| Term | Meaning |
+|------|---------|
+| **Host** | The player who creates the room and controls its settings |
+| **Player** | Anyone taking part in the game (draws, guesses, chats) |
+| **Drawer** | The player currently drawing the secret word |
+| **Round** | One complete cycle where every player gets a turn to draw |
+| **Turn** | One player's drawing session |
+| **Leaderboard** | Ranking of players by score |
+
+---
+
+## 🎮 How the Game Works
+
+1. **Enter the game** – Choose a username and an avatar.
+2. **Create or join a room** – The host creates a room and shares the room code. Friends join using that code.
+3. **Wait in the lobby** – Everyone sees who has joined and can chat. The host starts the game.
+4. **Pick a word** – The drawer chooses 1 of 3 random words (auto-picked if they take too long).
+5. **Draw and guess** – The drawer sketches the word. Everyone else types guesses in the chat. Letter hints appear over time.
+6. **Score points** – The faster you guess, the more points you earn.
+7. **Next turn** – The next player becomes the drawer. This repeats for all rounds.
+8. **Winner** – A final leaderboard shows the winner. Play again or return to the lobby.
 
 ---
 
 ## ✨ Key Features
 
-### 1. Home Page
-- Enter a username
-- Choose an avatar
-- Create a room or join an existing room using a room code
+### 🏠 Home Page
+- Enter a username and choose an avatar
+- Create a room, or join one using a room code
 
-### 2. Room Management
+### 🚪 Room Management
 - Auto-generated unique room code
-- Host configures: **number of players**, **number of rounds**, **drawing timer**
+- Host configures **number of players**, **number of rounds**, and the **drawing timer**
 
-### 3. Lobby
+### 🛋 Lobby
 - Live list of players and the host
 - Room settings display
 - Lobby chat
 - Start-game button (host only)
 
-### 4. Word Selection
-- Drawer chooses **1 of 3 random words**
-- If the drawer doesn't choose in time, a word is **auto-selected**
+### 🔤 Word Selection
+- Drawer picks from 3 random words
+- Automatic word selection after a 15-second timeout
 
-### 5. Drawing Canvas (HTML5 Canvas)
-- Brush tool with multiple colors
+### 🖌 Drawing Canvas (HTML5 Canvas)
+- Brush with multiple colours
 - Adjustable brush size
-- Eraser
-- Clear canvas
-- **Real-time synchronization** of strokes to all players
+- Eraser and clear-canvas tools
+- **Real-time stroke synchronisation** to all players
 
-### 6. Gameplay
+### 🎯 Gameplay
 - Automatic drawer assignment each turn
-- Guess acceptance and validation
+- Guess validation
 - Progressive **hints** (letters revealed over time)
-- Turn timer
-- Turn switching and round completion
+- Turn timer, turn switching, and round completion
 
-### 7. Chat & Scoring
+### 💬 Chat and Scoring
 - Real-time chat
-- Guess validation (correct guesses are hidden from other players)
-- Live score updates
+- Correct guesses are hidden from players who are still guessing
+- Speed-based scoring with live updates
 - Leaderboard and winner announcement
 
-### 8. Game Management
+### 🔁 Game Management
 - Final results screen
 - Replay option
 - Host controls
 - Return to lobby
+
+### 🔌 Reliability Features
+- **Late joining:** players can join a game in progress as guessers
+- **Reconnection:** a dropped player can rejoin with the same player ID and get their state back
+- **30-second grace period** before a disconnected player is removed
+- **Host transfer** if the host permanently leaves
 
 ---
 
@@ -83,9 +109,21 @@ A real-time, web-based multiplayer game where one player draws a secret word and
 | **Backend** | Python, FastAPI, Uvicorn (ASGI server) |
 | **Real-time** | WebSockets |
 | **Database** | SQLite |
-| **Communication** | WebSockets + HTTPS |
+| **Communication** | WebSockets + HTTPS (REST) |
 | **Design** | Figma |
+| **Testing** | Postman, automated Python test scripts |
 | **Tools** | VS Code, Git, GitHub |
+
+### Software Requirements
+
+| Category | Item | Specification |
+|----------|------|---------------|
+| Software | Operating System | Windows 10/11 (macOS/Linux also work) |
+| Software | Languages | JavaScript, Python |
+| Software | Frameworks | React, FastAPI |
+| Software | IDE | VS Code |
+| Software | Version Control | Git and GitHub |
+| Hardware | Network | Internet connection |
 
 ---
 
@@ -100,18 +138,30 @@ A real-time, web-based multiplayer game where one player draws a secret word and
                                                             │
                                                             ▼
                                                   ┌──────────────────┐
-                                                  │     MongoDB      │
+                                                  │     Database     │
                                                   │ (Rooms, Words,   │
                                                   │  Scores)         │
                                                   └──────────────────┘
+```
 
-
-- **REST (HTTPS):** room creation, joining, validation
+- **REST (HTTPS):** checking backend status, creating rooms, joining and validating rooms
 - **WebSockets:** drawing strokes, chat, guesses, timers, scores, turn changes
-- **Backend** keeps live room state in memory and uses MongoDB for persistent data (word bank, results)
+- **Backend:** keeps live room state in memory and uses the database for persistent data (word bank, results)
 
+### Main Modules
 
-## 🔄 Game Flow
+| Module | What it does |
+|--------|--------------|
+| **Room Management** | Creates rooms, assigns the host, manages joining and capacity |
+| **Game Management** | Controls rounds, turns, word selection, and state changes |
+| **Drawing and Guessing** | Broadcasts drawings, processes guesses, protects the secret word |
+| **Scoring and Leaderboard** | Calculates points, awards speed bonuses, updates rankings |
+| **Connection Management** | Handles disconnects, reconnects, and host migration |
+| **Security and Validation** | Rejects unauthorised actions, invalid messages, and invalid game states |
+
+---
+
+## 🔄 Game Flow and State Machine
 
 ```
 Home Page → Create/Join Room → Lobby → Host Starts Game
@@ -119,281 +169,157 @@ Home Page → Create/Join Room → Lobby → Host Starts Game
       → Turn Ends → Scores Updated → Next Drawer
       → All Rounds Complete → Final Leaderboard & Winner
       → Replay / Return to Lobby
+```
 
+The backend game state machine moves through these states:
 
+```
+LOBBY → ROUND_START → TURN_START → WORD_SELECTION → PLAYING → TURN_END → ROUND_END → GAME_END
+```
 
-## 💻 Frontend Details
+- After `TURN_END`, the game goes to the next drawer, or to `ROUND_END` once everyone has drawn.
+- After `ROUND_END`, it starts a new round, or goes to `GAME_END` when all rounds are done.
+- If the drawer disconnects during word selection or play, the turn ends.
+- If fewer than two players remain connected, the game ends.
 
-### Pages / Screens
-1. Home Page (username, avatar, create/join)
-2. Lobby (players, settings, chat, start)
-3. Game Screen (canvas, toolbar, chat panel, player list, timer, word hint)
-4. Result Screen (final leaderboard, winner, replay)
-
-### Main Components
-- `Canvas` – drawing area with mouse event handling
-- `Toolbar` – brush, color picker, size slider, eraser, clear
-- `ChatBox` – messages and guess input
-- `PlayerList` – avatars, names, live scores, drawer indicator
-- `Timer` and `WordHint`
-- `WordSelectModal` – shown to the drawer
-- `Leaderboard`
-
-### Key Frontend Responsibilities
-- Capture drawing events and send them over WebSocket
-- Render strokes received from other players
-- Manage WebSocket connection and reconnection
-- Responsive layout for desktop and laptop screens
-
----
-
-## ⚙️ Backend Details
-
-### Responsibilities
-- Create and validate rooms; generate unique room codes
-- Manage WebSocket connections per room
-- Broadcast drawing data, chat, and game events
-- Control game state: lobby → playing → round end → results
-- Assign drawers, serve random words, run timers, reveal hints
-- Validate guesses and calculate scores
-- Input validation and security checks
-
-### Suggested REST Endpoints
-
-| Method | Endpoint | Purpose |
-|--------|----------|---------|
-| POST | `/api/rooms` | Create a room (returns room code) |
-| POST | `/api/rooms/{code}/join` | Join a room |
-| GET | `/api/rooms/{code}` | Get room details |
-| WS | `/ws/{room_code}` | Real-time game connection |
-
----
-
-### 🌐 Networking Module – Work Completed
-
-#### 1. WebSocket Communication
-- Implemented WebSocket-based real-time communication using FastAPI WebSockets.
-- Established connections between clients and the game server.
-- Added connection and disconnection handling.
-- Added unique player IDs for WebSocket connections.
-- Implemented message-based communication between clients and server.
-
-#### 2. Message Routing
-Implemented server-side routing for different client messages:
-
-- `join`
-- `reconnect`
-- `chat`
-- `select_word`
-- `draw`
-- `lobby_update`
-- `start_game`
-
-And server responses/events such as:
-
-- `game_state`
-- `word_options`
-- `chat`
-- `system_message`
-- `timer`
-- `leaderboard`
-- `draw`
-- `player_joined`
-- `player_left`
-- `error`
-- `connection`
-
-#### 3. Player Join & Room Management
-- Implemented player joining through WebSockets.
-- Added player name and avatar validation.
-- Connected players are maintained per room.
-- Added host assignment.
-- Added room/player capacity validation.
-- Added notifications when players join.
-- Prevented invalid/duplicate player connections.
-
-#### 4. Late Joining
-- Implemented support for players joining while a game is already running.
-- Late players can join the current game without interrupting the ongoing turn.
-- Late joiners participate as guessers in the current turn.
-- Added them to future turn order.
-- Synchronized their current game state after joining.
-
-#### 5. Reconnection
-- Implemented player reconnection using the existing player ID.
-- Reconnection restores the existing player instead of creating a duplicate.
-- Reconnected players receive the current game state.
-- Word visibility is restored according to the player's role:
-  - Drawer → full word
-  - Correct guesser → full word
-  - Other guessers → word pattern
-
-#### 6. Disconnect & Grace Period
-- Implemented player disconnect handling.
-- Added a 30-second reconnection grace period.
-- Disconnected players continue occupying their slot during the grace period.
-- Players can reconnect using the same ID.
-- Players are permanently removed after the grace period expires.
-- Other players are notified about temporary disconnections and permanent removals.
-- Host transfer is handled when the host permanently leaves.
-
-#### 7. Chat & Guess Networking
-- Integrated WebSocket chat with the existing `GameEngine.process_guess()`.
-- Removed server-side chat history/storage from networking.
-- Messages are classified through the game engine as:
-  - Normal chat
-  - Close guess
-  - Wrong guess
-  - Correct guess
-- Implemented recipient filtering so different players see appropriate messages.
-- Correct guesses are privately acknowledged to the correct player and announced appropriately to others.
-- Already-correct players' messages are hidden from players who are still guessing when required.
-
-#### 8. Word Visibility
-Implemented player-specific word visibility:
-
-- Drawer receives the complete word.
-- Guessers receive the hidden word pattern.
-- Correct guesser receives the complete word.
-- Remaining guessers continue seeing the updated pattern.
-- Everyone receives the complete word when the turn ends.
-- Word visibility is also restored correctly after reconnection.
-
-#### 9. Word Selection Networking
-- Added communication for word options.
-- Word options are sent only to the drawer.
-- Drawer selects a word through WebSocket.
-- Selected word is synchronized with the other players through appropriate visibility rules.
-- Added a 15-second word-selection timer.
-- Added automatic word selection when the drawer does not select within the allowed time.
-
-#### 10. Real-Time Drawing
-- Implemented WebSocket relay for drawing data.
-- Drawing data from the drawer is forwarded to other connected players.
-- Only the current drawer is allowed to send drawing updates.
-
-#### 11. Game Timers
-Implemented real-time timers through asynchronous networking tasks:
+### Timers
 
 | Timer | Duration |
 |-------|----------|
 | Round-start countdown | 3 seconds |
 | Word-selection countdown | 15 seconds |
-| Drawing/guessing timer | Configurable, default 80 seconds |
+| Drawing/guessing timer | Configurable (default 80 seconds) |
 | Leaderboard display | 7 seconds |
 
-- Timer updates are broadcast to clients every second.
-- Turn automatically ends when the drawing timer expires.
-
-#### 12. Automatic Hint Synchronization
-- Added networking support for automatic hints.
-- Hints are distributed during the drawing timer.
-- Hint timing is calculated based on the allowed number of hints.
-- Updated word patterns are broadcast to players after each hint.
-- Uses the existing `GameEngine.reveal_hint()` logic.
-
-#### 13. Turn & Round Synchronization
-Networking coordinates transitions between:
-
-- Round start
-- Word selection
-- Drawing/guessing
-- Turn end
-- Leaderboard
-- Next turn
-- Next round
-- Game end
-
-The server broadcasts updated game state after important state changes.
-
-#### 14. Game State Synchronization
-Clients receive synchronized information about:
-
-- Players
-- Player connection status
-- Host
-- Game settings
-- Current round
-- Current turn
-- Current drawer
-- Game state
-- Player-specific word information
-- Leaderboard information
-
-#### 15. Lobby Updates
-- Implemented host-controlled lobby updates through WebSocket.
-- Added validation for lobby settings.
-- Prevented player capacity from being reduced below the number of persistent players.
-- Settings are synchronized with connected clients.
-
-#### 16. Error Handling
-Added WebSocket error responses for invalid actions. Handles:
-
-- Invalid room
-- Invalid player
-- Invalid word selection
-- Unauthorized actions
-- Invalid game states
-- Invalid profile information
-- Non-drawer drawing attempts
-- Non-host lobby/game-start actions
-
-#### 17. Asynchronous Runtime Management
-Added background tasks for:
-
-- Turn timers
-- Word-selection timers
-- Round transitions
-- Leaderboard countdown
-- Automatic hints
-- Disconnect grace periods
-
-Added task cancellation to prevent old timers from affecting later turns.
-
-#### 18. Networking Testing
-- Created/updated WebSocket testing to automatically create a room.
-- Tested:
-  - Room creation
-  - WebSocket connection
-  - Player joining
-  - Host assignment
-  - Game start
-  - Round countdown
-  - Word selection
-  - Drawer/guesser word visibility
-  - Correct guessing
-  - Game-state synchronization
-- Verified backend Python files compile successfully.
+Timer updates are broadcast to all clients every second.
 
 ---
 
-## 🔌 WebSocket Events
+## 💻 Frontend Details
 
-| Event | Direction | Description |
-|-------|-----------|-------------|
-| `join_room` | Client → Server | Player joins a room |
-| `player_list` | Server → Clients | Updated list of players |
-| `start_game` | Client → Server | Host starts the game |
-| `word_options` | Server → Drawer | 3 random words to choose from |
-| `word_selected` | Client → Server | Drawer's chosen word |
-| `draw` | Client ⇄ Server | Stroke data (x, y, color, size) |
-| `clear_canvas` | Client ⇄ Server | Clear the canvas |
-| `chat_message` | Client ⇄ Server | Chat message |
-| `guess` | Client → Server | Player's guess |
-| `correct_guess` | Server → Clients | Announces a correct guess + score |
-| `hint_update` | Server → Clients | Reveals another letter |
-| `timer_update` | Server → Clients | Remaining time |
-| `turn_end` | Server → Clients | Turn finished, reveal word |
-| `game_over` | Server → Clients | Final leaderboard + winner |
+### Screens
+1. **Home Page** – username, avatar, create/join
+2. **Lobby** – players, settings, chat, start button
+3. **Game Screen** – canvas, toolbar, chat panel, player list, timer, word hint
+4. **Result Screen** – final leaderboard, winner, replay
+
+### Main Components
+- `Canvas` – drawing area with mouse event handling
+- `Toolbar` – brush, colour picker, size slider, eraser, clear
+- `ChatBox` – messages and guess input
+- `PlayerList` – avatars, names, live scores, drawer indicator
+- `Timer` and `WordHint`
+- `WordSelectModal` – shown only to the drawer
+- `Leaderboard`
+
+### Responsibilities
+- Capture drawing events and send them over WebSocket
+- Render strokes received from other players
+- Manage the WebSocket connection and reconnection
+- Responsive layout for desktop and laptop screens
+
+---
+
+## ⚙️ Backend and Networking Details
+
+### Responsibilities
+- Create and validate rooms; generate unique room codes
+- Manage WebSocket connections for each room
+- Broadcast drawing data, chat, and game events
+- Control game state from lobby to results
+- Assign drawers, serve random words, run timers, reveal hints
+- Validate guesses and calculate scores
+- Validate input and enforce security checks
+
+### Networking Module – What Was Built
+
+| Area | What it does |
+|------|--------------|
+| **WebSocket communication** | Real-time client-server messaging with unique player IDs and connect/disconnect handling |
+| **Message routing** | Server-side routing for every client message type (see reference below) |
+| **Player join and rooms** | Name and avatar validation, host assignment, capacity checks, duplicate-connection prevention |
+| **Late joining** | Players can join mid-game as guessers without interrupting the current turn, and are added to future turns |
+| **Reconnection** | Rejoin with the same player ID; no duplicate player is created; game state is restored |
+| **Disconnect and grace period** | 30-second window to reconnect; others are notified; permanent removal after expiry; host transfer if needed |
+| **Chat and guess networking** | Integrated with `GameEngine.process_guess()`; messages are classified as normal chat, close guess, wrong guess, or correct guess |
+| **Word visibility** | Drawer sees the full word; guessers see a hidden pattern; correct guessers see the full word; everyone sees it when the turn ends |
+| **Word selection** | Options sent only to the drawer, with a 15-second timer and auto-select |
+| **Real-time drawing** | Strokes from the drawer are relayed to everyone else; only the drawer may send drawing data |
+| **Game timers** | Async tasks for countdowns, drawing time, and leaderboard display |
+| **Automatic hints** | Hints are spaced across the drawing timer using `GameEngine.reveal_hint()` |
+| **Turn and round sync** | Coordinates round start, word selection, drawing, turn end, leaderboard, next turn/round, and game end |
+| **Game state sync** | Players, connection status, host, settings, round, turn, drawer, and leaderboard are kept consistent |
+| **Lobby updates** | Host-only settings changes with validation (capacity cannot drop below current player count) |
+| **Error handling** | Clear errors for invalid room, invalid player, bad word choice, unauthorised actions, wrong game state, bad profile data, non-drawer drawing, and non-host actions |
+| **Async runtime** | Background tasks for timers, hints, transitions, and grace periods, with cancellation so old timers never affect later turns |
+
+### Scoring
+- Points are awarded for correct guesses.
+- Faster guesses earn speed bonuses.
+- Scores persist across rounds and update live on the leaderboard.
+
+---
+
+## 🔌 API and WebSocket Reference
+
+### REST Endpoints
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/api/rooms/{code}` | Get room details |
+| POST | `/api/rooms` | Create a room (returns room code) |
+| POST | `/api/rooms/{code}/join` | Join a room |
+| WS | `/ws/{room_code}` | Real-time game connection |
+
+### WebSocket Messages: Client → Server
+
+| Message | Purpose |
+|---------|---------|
+| `join` | Join the room as a player |
+| `reconnect` | Rejoin using an existing player ID |
+| `chat` | Send a chat message or guess |
+| `select_word` | Drawer picks a word |
+| `draw` | Drawer sends stroke data |
+| `lobby_update` | Host changes room settings |
+| `start_game` | Host starts the game |
+
+### WebSocket Messages: Server → Client
+
+| Message | Purpose |
+|---------|---------|
+| `connection` | Connection confirmed, player ID assigned |
+| `game_state` | Full synchronised game state |
+| `word_options` | 3 word choices (drawer only) |
+| `chat` | Chat or guess result message |
+| `system_message` | Announcements (joins, correct guesses, etc.) |
+| `timer` | Remaining time, sent every second |
+| `leaderboard` | Current scores and rankings |
+| `draw` | Stroke data relayed to guessers |
+| `player_joined` | A player joined |
+| `player_left` | A player left or was removed |
+| `error` | An invalid action was attempted |
 
 ---
 
 ## 🗄 Database Design
 
-- **rooms** – `room_code`, `host`, `max_players`, `rounds`, `timer`, `status`, `created_at`
-- **players** – `username`, `avatar`, `room_code`, `score`
-- **words** – `word`, `category` / `difficulty`
-- **game_results** – `room_code`, `final_scores`, `winner`, `played_at`
+| Table | Fields |
+|-------|--------|
+| **rooms** | `room_code`, `host`, `max_players`, `rounds`, `timer`, `status`, `created_at` |
+| **players** | `username`, `avatar`, `room_code`, `score` |
+| **words** | `word`, `category` / `difficulty` |
+| **game_results** | `room_code`, `final_scores`, `winner`, `played_at` |
+
+### Game Data Used During Play
+
+| Attribute | Type | Description |
+|-----------|------|-------------|
+| Player Name | String | Identifies a player |
+| Selected Word | String | Word chosen for drawing (from a predefined list) |
+| Guess | String | Word entered by a player |
+| Score | Integer | Points earned (non-negative) |
+
+> This project does not use machine learning, so no ML dataset is needed.
 
 ---
 
@@ -425,67 +351,70 @@ skribbl-clone/
 │   ├── SRS.pdf
 │   └── Tech_Stack.pdf
 └── README.md
-```
 
----
+## 🧪 Testing
 
-## 🚀 Installation & Setup
+Testing used a **Postman API collection** and **automated Python test scripts**. The test report documents **65 test cases with a 100% pass rate**.
 
-### 1. Clone the repository
-```bash
-git clone https://github.com/<your-username>/skribbl-clone.git
-cd skribbl-clone
-```
+| Test Category | Coverage | Result |
+|---------------|----------|--------|
+| REST API and room management | Backend status, room creation, player joining | ✅ PASS |
+| Game lifecycle | Game start, turns, rounds, game completion | ✅ PASS |
+| Drawing and guessing | Drawing broadcasts, word selection, guesses | ✅ PASS |
+| Scoring and leaderboard | Point calculation, speed bonuses, rankings | ✅ PASS |
+| Security and edge cases | Invalid actions, unauthorised requests, invalid messages | ✅ PASS |
+| Reconnection and recovery | Reconnection, host migration, disconnection handling | ✅ PASS |
+| End-to-end | Complete multiplayer match flow | ✅ PASS |
 
-### 2. Backend setup
-```bash
-cd backend
-python -m venv venv
+### Functional Test Cases
 
-# Windows
-venv\Scripts\activate
+| # | Test Case | Expected Result | Status |
+|---|-----------|-----------------|--------|
+| 1 | Create a game room | Room is created successfully | ✅ PASS |
+| 2 | Join an existing room | Player joins successfully | ✅ PASS |
+| 3 | Select a word | Valid word is accepted | ✅ PASS |
+| 4 | Draw on the canvas | Drawing is broadcast to other players | ✅ PASS |
+| 5 | Submit a correct guess | Correct guess is recognised | ✅ PASS |
+| 6 | Submit an incorrect guess | Incorrect guess is handled correctly | ✅ PASS |
+| 7 | Update player scores | Scores are calculated and updated | ✅ PASS |
+| 8 | Disconnect and reconnect | Player state is recovered within the grace period | ✅ PASS |
+| 9 | Send an unauthorised action | Action is rejected | ✅ PASS |
+| 10 | Complete a game | Final leaderboard is displayed | ✅ PASS |
 
-# macOS/Linux
-source venv/bin/activate
-
-pip install -r requirements.txt
-uvicorn app.main:app --reload
-```
-Backend runs at `http://localhost:8000`
+The automated tests also confirm that drawings reach all players, secret words stay hidden from guessers, scores persist across rounds, and separate rooms stay isolated.
 
 ---
 
 ## 📊 Project Status
 
-### Frontend
-- [ ] Home page (username, avatar, create/join)
-- [ ] Lobby page
-- [ ] Drawing canvas + toolbar
-- [ ] Chat panel and guess input
-- [ ] Player list, timer, word hint display
-- [ ] Word selection modal
-- [ ] Leaderboard and result screen
-- [ ] Responsive styling
-
 ### Backend
-- [ ] FastAPI project setup
-- [ ] Room creation and joining APIs
-- [ ] WebSocket connection manager
-- [ ] Real-time drawing synchronization
-- [ ] Game state management (turns, rounds, timers)
-- [ ] Word bank and random word selection
-- [ ] Guess validation and scoring logic
-- [ ] Hint reveal system
-- [ ] MongoDB integration
-- [ ] Input validation
+- [x] FastAPI project setup
+- [x] Room creation and joining APIs
+- [x] WebSocket connection manager
+- [x] Real-time drawing synchronisation
+- [x] Game state management (turns, rounds, timers)
+- [x] Word bank and random word selection
+- [x] Guess validation and scoring logic
+- [x] Hint reveal system
+- [x] Reconnection, late joining, and host migration
+- [x] Input validation and security checks
+
+### Frontend
+- [x] Home page (username, avatar, create/join)
+- [x] Lobby page
+- [x] Drawing canvas and toolbar
+- [x] Chat panel and guess input
+- [x] Player list, timer, and word hint display
+- [x] Word selection modal
+- [x] Leaderboard and result screen
+- [ ] Full responsive styling
 
 ### Final Stage
-- [ ] Frontend–backend integration
-- [ ] Multi-room and multi-player testing
+- [x] Frontend–backend integration
+- [x] Backend and multiplayer testing
 - [ ] Browser compatibility testing
-- [ ] Bug fixing and optimization
 - [ ] Deployment with HTTPS
-- [ ] Final documentation, UML diagrams (Use Case, Activity)
+- [ ] Final documentation and UML diagrams
 
 ---
 
@@ -493,45 +422,60 @@ Backend runs at `http://localhost:8000`
 
 | Category | Requirement |
 |----------|-------------|
-| **Performance** | Low-latency drawing; near real-time chat; multiple concurrent rooms |
+| **Performance** | Low-latency drawing, near real-time chat, multiple concurrent rooms |
 | **Security** | Input validation and HTTPS |
-| **Reliability** | Stable, synchronized gameplay between players |
-| **Maintainability** | Modular architecture, documented code, easy updates |
-| **Scalability** | Multiple game rooms and concurrent players |
+| **Reliability** | Stable, synchronised gameplay; handles disconnects gracefully |
+| **Maintainability** | Modular architecture and documented code |
+| **Scalability** | Multiple rooms and concurrent players |
 | **Usability** | Simple, responsive, easy to use |
-| **Compatibility** | Works across modern desktop browsers |
+| **Compatibility** | Works on modern desktop browsers |
 
 ---
 
-## ⚠️ Constraints & Assumptions
+## ⚠️ Constraints and Assumptions
 
-### Constraints
-- Requires a stable internet connection
+**Constraints**
+- Needs a stable internet connection
 - Browser must support HTML5 Canvas and JavaScript
-- Depends on reliable WebSocket synchronization
+- Depends on reliable WebSocket synchronisation
 
-### Assumptions
+**Assumptions**
 - Users have internet access and a supported browser
-- The server remains online during gameplay
-- Target devices are desktops/laptops (mobile not in the initial scope)
+- The server stays online during gameplay
+- Target devices are desktops and laptops (mobile is out of initial scope)
+- Designed for small groups (up to six players per room)
+
+---
+
+## 🚧 Limitations
+
+- Network delays or unstable connections can affect gameplay
+- Player disconnections can interrupt a game
+- The number of simultaneous players depends on server capacity
+- Drawing tools are basic (no fill bucket or undo yet)
 
 ---
 
 ## 🔮 Future Enhancements
 
 - Mobile and touch-screen support
-- Private/public room listing
+- Public and private room listing
 - Custom word lists
-- Kick/ban and vote-kick controls
+- Kick, ban, and vote-kick controls
 - Sound effects and animations
-- User accounts and persistent stats
+- User accounts, profiles, achievements, and game history
 - Fill-bucket tool and undo
+- More game modes and drawing tools
 - Multiple languages
+- Stronger anti-cheating and security features
 
----
 
 ## 📄 References
 
-- IEEE SRS Standard
-- HTML5 Canvas API
-- React, FastAPI, MongoDB documentation
+1. [MDN Web Docs – WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket)
+2. [OWASP – WebSocket Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/WebSocket_Security_Cheat_Sheet.html)
+3. [FastAPI Documentation](https://fastapi.tiangolo.com/)
+4. [React Documentation](https://react.dev/)
+5. [HTML5 Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)
+6. IEEE SRS Standard
+

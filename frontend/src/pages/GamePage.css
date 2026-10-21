@@ -1,114 +1,155 @@
+/* ---------- Game Page Layout ---------- */
+
 .game-page {
     display: flex;
-
     width: 90%;
     max-width: 1300px;
-
     flex-direction: column;
-
     padding: 20px;
-
     gap: 12px;
-
     box-sizing: border-box;
-
     margin: 0 auto;
 }
 
-/* ---------- Main Layout ---------- */
+.game-page > h1 {
+    color: #ffffff;
+    font-family: var(--font-display, "Fredoka", sans-serif);
+    font-size: clamp(30px, 3vw, 42px);
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 8px;
+    text-shadow: 0 3px 0 rgba(8, 41, 95, 0.9);
+}
 
 .game-content {
     display: grid;
-
     grid-template-columns: 220px minmax(0, 1fr) 230px;
-
     gap: 12px;
-
     width: 100%;
-
     align-items: start;
 }
 
-/* Left panel */
-
-.player-list {
-    width: 220px;
+.game-content > .player-list {
+    width: 100%;
+    min-width: 0;
+    background: transparent;
 }
-
-/* Middle column (Canvas + Toolbar) */
 
 .canvas-column {
     min-width: 0;
-
     display: flex;
     flex-direction: column;
+    border-radius: 12px;
+    overflow: hidden;
+
+    /* One shared shadow for the complete canvas and toolbar */
+    box-shadow: 0 5px 0 var(--color-bg-dark, #08295f);
 }
 
-/* Canvas */
+/* ---------- Drawing Canvas ---------- */
 
 .canvas-section {
     position: relative;
     width: 100%;
     height: 440px;
-    border: 1px solid black;
-    background: white;
+    border: 3px solid var(--color-outline, #243b68);
+    border-bottom: 0;
+    border-radius: 10px 10px 0 0;
+    background: #ffffff;
     box-sizing: border-box;
+    overflow: hidden;
 }
 
 .drawing-area {
     width: 100%;
     height: 100%;
+    background: #ffffff;
 }
 
 .drawing-area canvas {
     width: 100%;
     height: 100%;
-
     display: block;
-
-    background: white;
+    background: #ffffff;
 }
 
-/* Right panel */
+/* ---------- Chat Panel ---------- */
 
-.chat {
-    width: 230px;
-    height: 440px;
-    box-sizing: border-box;
-}
-
-.chat-messages {
-    flex: 1;
-    overflow-y: auto;
-}
-
-.chat input {
+.game-content > .chat {
+    display: flex;
+    flex-direction: column;
     width: 100%;
+    height: 440px;
+    min-width: 0;
+    min-height: 0;
+    padding: 12px;
     box-sizing: border-box;
+    background: #ffffff;
+    color: var(--color-text, #243b68);
+    border: 2px solid var(--color-outline, #243b68);
+    border-radius: 10px;
+    box-shadow: 0 4px 0 var(--color-bg-dark, #08295f);
+    font-family: var(--font-body, "Nunito", sans-serif);
+    overflow: hidden;
 }
 
-/* ---------- Toolbar ---------- */
+.game-content > .chat .chat-messages {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 8px;
+    min-height: 0;
+    overflow-y: auto;
+    color: var(--color-text, #243b68);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.game-content > .chat input {
+    width: 100%;
+    min-height: 42px;
+    flex-shrink: 0;
+    margin-top: 10px;
+    padding: 9px 10px;
+    box-sizing: border-box;
+    border: 2px solid var(--color-outline-light, #d6dfed);
+    border-radius: 7px;
+    background: var(--color-panel-muted, #f3f6fb);
+    color: var(--color-text, #243b68);
+    font-family: var(--font-body, "Nunito", sans-serif);
+    font-size: 14px;
+}
+
+.game-content > .chat input:focus {
+    outline: none;
+    border-color: var(--color-outline, #243b68);
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(36, 59, 104, 0.12);
+}
+
+/* ---------- Canvas Toolbar ---------- */
 
 .canvas-toolbar {
-    height: 52px;
-
-    border: 1px solid black;
-    border-top: none;
-
-    background: white;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     gap: 10px;
-
-    padding: 0 8px;
-
+    width: 100%;
+    min-width: 0;
+    min-height: 52px;
+    padding: 8px;
     box-sizing: border-box;
+    border: 3px solid var(--color-outline, #243b68);
+    border-top: 1px solid var(--color-outline-light, #d6dfed);
+    border-radius: 0 0 10px 10px;
+    background: #ffffff;
 
+    /* Preserve one row when the available width is limited */
     flex-wrap: nowrap;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
 }
 
 .tool-group,
@@ -116,95 +157,142 @@
 .color-palette {
     display: flex;
     align-items: center;
-
     gap: 4px;
-
     flex-wrap: nowrap;
+    flex-shrink: 0;
 }
 
 /* Tool buttons */
 
 .tool-group button {
-    height: 30px;
-
-    padding: 0 7px;
-
-    border: 1px solid #999;
-    background: #f5f5f5;
-
+    min-height: 30px;
+    padding: 4px 9px;
+    border: 2px solid var(--color-outline, #243b68);
+    border-radius: 6px;
+    background: var(--color-panel-muted, #f3f6fb);
+    color: var(--color-text, #243b68);
+    font-family: var(--font-body, "Nunito", sans-serif);
     font-size: 12px;
-
+    font-weight: 700;
     cursor: pointer;
-
     white-space: nowrap;
+    box-shadow: 0 2px 0 var(--color-outline, #243b68);
+    transition: background-color 0.15s ease,
+                color 0.15s ease,
+                transform 0.15s ease,
+                box-shadow 0.15s ease;
 }
 
-/* Brush buttons */
+.tool-group button:hover {
+    background: var(--color-panel-hover, #e8eef8);
+    transform: translateY(-1px);
+}
+
+.tool-group button.active-tool {
+    background: var(--color-primary, #35c759);
+    color: #ffffff;
+    border-color: var(--color-outline, #243b68);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.22);
+    transform: translateY(1px);
+}
+
+/* Brush size buttons */
 
 .brush-group button {
+    flex-shrink: 0;
     width: 27px;
     height: 30px;
-
     padding: 0;
-
-    border: 1px solid #999;
-    background: #f5f5f5;
-
+    border: 2px solid var(--color-outline-light, #d6dfed);
+    border-radius: 6px;
+    background: var(--color-panel-muted, #f3f6fb);
+    color: var(--color-text, #243b68);
     cursor: pointer;
-
     font-size: 15px;
+    transition: background-color 0.15s ease,
+                border-color 0.15s ease,
+                transform 0.15s ease,
+                box-shadow 0.15s ease;
 }
 
-/* Colour buttons */
+.brush-group button:hover {
+    border-color: var(--color-outline, #243b68);
+}
+
+.brush-group button.active-tool {
+    background: #dce8ff;
+    color: var(--color-text, #243b68);
+    border: 2px solid var(--color-outline, #243b68);
+    box-shadow: inset 0 0 0 2px #ffffff,
+                0 1px 0 rgba(36, 59, 104, 0.25);
+    transform: translateY(1px);
+}
+
+/* Colour palette */
 
 .color-palette button {
+    flex-shrink: 0;
     width: 23px;
     height: 26px;
-
     padding: 0;
-
-    border: 1px solid #999;
-
+    border: 2px solid var(--color-outline-light, #d6dfed);
+    border-radius: 5px;
     cursor: pointer;
-
-    flex-shrink: 0;
+    transition: border-color 0.15s ease,
+                transform 0.15s ease,
+                box-shadow 0.15s ease;
 }
 
-/* ---------- Colour Palette ---------- */
+.color-palette button:hover {
+    border-color: var(--color-outline, #243b68);
+    transform: translateY(-1px);
+}
+
+.color-palette button.active-color {
+    border: 3px solid var(--color-outline, #243b68);
+    outline: 2px solid #ffffff;
+    outline-offset: -5px;
+    box-shadow: 0 0 0 2px var(--color-outline, #243b68);
+    transform: scale(1.08);
+    position: relative;
+    z-index: 1;
+}
 
 .white     { background: #ffffff !important; }
 .lightgrey { background: #d3d3d3 !important; }
 .grey      { background: #808080 !important; }
 .black     { background: #000000 !important; }
-
 .pink      { background: #ff69b4 !important; }
 .red       { background: #ff0000 !important; }
 .orange    { background: #ff8c00 !important; }
 .brown     { background: #8b4513 !important; }
-
 .yellow    { background: #ffff00 !important; }
 .lime      { background: #7fff00 !important; }
 .green     { background: #008000 !important; }
 .cyan      { background: #00e5ff !important; }
-
 .blue      { background: #0066ff !important; }
 .purple    { background: #8000ff !important; }
 
-/* ---------- Shared Overlay ---------- */
+/* Keyboard focus */
 
-.canvas-overlay {
-  position: absolute;
-  inset: 0;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  background: rgba(190,195,205,0.45);
-  z-index: 10;
+.tool-group button:focus-visible,
+.brush-group button:focus-visible,
+.color-palette button:focus-visible {
+    outline: 3px solid var(--color-primary, #35c759);
+    outline-offset: 2px;
 }
 
-/* Choose Word buttons */
+/* ---------- Game Overlays ---------- */
+
+.canvas-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(190, 195, 205, 0.45);
+    z-index: 10;
+}
 
 .word-buttons {
     display: flex;
@@ -214,57 +302,101 @@
 .word-buttons button {
     padding: 10px 18px;
     font-size: 16px;
-    background: white;
-    border: 1px solid black;
+    background: #ffffff;
+    color: var(--color-text, #243b68);
+    border: 2px solid var(--color-outline, #243b68);
+    border-radius: 8px;
     cursor: pointer;
+    box-shadow: 0 3px 0 var(--color-outline, #243b68);
 }
+
+/* Existing placeholders */
+
 .avatar-placeholder {
-  width: 42px;
-  height: 42px;
-
-  border: 2px solid #555;
-  border-radius: 50%;
-
-  background: #d9d9d9;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-family: Arial, sans-serif;
-  font-weight: bold;
-  font-size: 16px;
-  color: #444;
+    width: 42px;
+    height: 42px;
+    border: 2px solid #555;
+    border-radius: 50%;
+    background: #d9d9d9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: #444;
 }
+
 .icon-placeholder {
-  width: 22px;
-  height: 22px;
-
-  border: 1px solid #555;
-  background: #d8d8d8;
-  color: #555;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  font-size: 9px;
-  font-weight: bold;
-  border-radius: 4px;
-
-  flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border: 1px solid #555;
+    background: #d8d8d8;
+    color: #555;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 9px;
+    font-weight: bold;
+    border-radius: 4px;
+    flex-shrink: 0;
 }
-/* ---------- Debug Navigation ---------- */
+
+/* Existing debug navigation */
 
 .debug-nav {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 8px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
 }
 
 .debug-nav button {
-  padding: 4px 10px;
-  font-size: 12px;
-  cursor: pointer;
+    padding: 4px 10px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+/* ---------- Responsive Layout ---------- */
+
+@media (max-width: 1000px) {
+    .game-page {
+        width: 100%;
+        padding: 16px;
+    }
+
+    .game-content {
+        grid-template-columns: 180px minmax(0, 1fr) 200px;
+        gap: 10px;
+    }
+
+    .canvas-toolbar {
+        justify-content: flex-start;
+        gap: 6px;
+    }
+}
+
+@media (max-width: 760px) {
+    .game-content {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .game-content > .player-list,
+    .game-content > .chat {
+        width: 100%;
+    }
+
+    .game-content > .chat {
+        height: 360px;
+    }
+
+    .canvas-section {
+        height: auto;
+        aspect-ratio: 16 / 10;
+        min-height: 250px;
+    }
+
+    .canvas-toolbar {
+        justify-content: flex-start;
+    }
 }

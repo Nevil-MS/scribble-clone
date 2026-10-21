@@ -1,51 +1,73 @@
+/* ---------- Lobby Settings Panel ---------- */
+
 .lobby-settings {
     display: flex;
     flex-direction: column;
-
-    height: auto;
     width: 100%;
-
     min-width: 0;
-
-    padding: 6px;
-    gap: 6px;
-
+    height: auto;
+    padding: 12px;
+    gap: 12px;
     box-sizing: border-box;
-
-    background-color: #d9d9d9;
+    background: #ffffff;
+    color: var(--color-text, #243b68);
+    border: 2px solid var(--color-outline, #243b68);
+    border-radius: 10px;
+    box-shadow: 0 4px 0 var(--color-bg-dark, #08295f);
+    font-family: var(--font-body, "Nunito", sans-serif);
 }
 
 /* ---------- Main Settings ---------- */
 
 .settings-scroll {
     display: grid;
-
-    grid-template-columns: 1fr 2fr;
-
-    column-gap: 14px;
-    row-gap: 8px;
-
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    column-gap: 12px;
+    row-gap: 10px;
     flex: 0 0 auto;
-
     width: 100%;
-
     box-sizing: border-box;
 }
 
 .settings-scroll label {
     display: flex;
     align-items: center;
-
-    min-height: 30px;
+    min-height: 36px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.3;
+    text-shadow: 0 1px 3px rgba(8, 41, 95, 0.8);
 }
 
 .settings-scroll select {
     width: 100%;
-    height: 32px;
-
-    font-size: 1em;
-
+    min-width: 0;
+    height: 40px;
+    padding: 0 10px;
+    border: 2px solid var(--color-outline-light, #d6dfed);
+    border-radius: 7px;
+    background: var(--color-panel-muted, #f3f6fb);
+    color: var(--color-text, #243b68);
+    font-family: var(--font-body, "Nunito", sans-serif);
+    font-size: 16px;
+    font-weight: 700;
     box-sizing: border-box;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.15s ease,
+                box-shadow 0.15s ease,
+                background-color 0.15s ease;
+}
+
+.settings-scroll select:hover {
+    border-color: var(--color-outline, #243b68);
+}
+
+.settings-scroll select:focus {
+    background: #ffffff;
+    border-color: var(--color-outline, #243b68);
+    box-shadow: 0 0 0 3px rgba(36, 59, 104, 0.12);
 }
 
 /* ---------- Custom Words ---------- */
@@ -53,72 +75,177 @@
 .custom-words {
     display: flex;
     flex-direction: column;
-
     flex: 1 1 auto;
-
+    min-width: 0;
     min-height: 0;
+    gap: 6px;
 }
 
 .custom-word-header {
     display: flex;
-
     justify-content: space-between;
     align-items: center;
-
-    min-height: 30px;
+    flex-wrap: wrap;
+    min-height: 36px;
+    gap: 8px;
+    padding: 2px 4px;
+    box-sizing: border-box;
 }
 
-.custom-word-header label {
+/* Both the "Custom word" title and checkbox label */
+.custom-word-header > div,
+.custom-word-header > label {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff;
+    font-family: var(--font-body, "Nunito", sans-serif);
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.3;
+    text-shadow: 0 1px 3px rgba(8, 41, 95, 0.8);
+    opacity: 1;
+    visibility: visible;
+}
+
+.custom-word-header > label {
     display: flex;
     align-items: center;
-
-    gap: 6px;
-
-    white-space: nowrap;
+    justify-content: flex-end;
+    gap: 8px;
 }
 
 .custom-word-header input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-
+    width: 18px;
+    height: 18px;
     margin: 0;
+    accent-color: var(--color-primary, #35c759);
+    cursor: pointer;
+    flex-shrink: 0;
 }
+
+/* Custom word textarea */
 
 .custom-words textarea {
     width: 100%;
     flex: 1 1 auto;
-
+    min-width: 0;
     min-height: 120px;
-
-    resize: none;
-
+    resize: vertical;
     box-sizing: border-box;
-
-    padding: 8px;
-
-    font-family: inherit;
+    padding: 10px;
+    border: 2px solid var(--color-outline-light, #d6dfed);
+    border-radius: 7px;
+    background: var(--color-panel-muted, #f3f6fb);
+    color: var(--color-text, #243b68);
+    font-family: var(--font-body, "Nunito", sans-serif);
+    font-size: 14px;
+    line-height: 1.5;
+    outline: none;
+    transition: border-color 0.15s ease,
+                box-shadow 0.15s ease,
+                background-color 0.15s ease;
 }
 
-/* ---------- Buttons ---------- */
+.custom-words textarea::placeholder {
+    color: var(--color-text-muted, #64748b);
+    opacity: 1;
+}
+
+.custom-words textarea:focus {
+    background: #ffffff;
+    border-color: var(--color-outline, #243b68);
+    box-shadow: 0 0 0 3px rgba(36, 59, 104, 0.12);
+}
+
+/* ---------- Lobby Action Buttons ---------- */
 
 .lobby-actions {
     display: grid;
-
-    grid-template-columns: 1fr 150px;
-
+    grid-template-columns: minmax(0, 1fr) 120px;
+    gap: 8px;
     width: 100%;
 }
 
 .lobby-actions button {
-    height: 50px;
-
+    min-width: 0;
+    min-height: 44px;
+    height: auto;
+    padding: 9px 12px;
+    border: 2px solid var(--color-outline, #243b68);
+    border-radius: 8px;
+    background: var(--color-panel-muted, #f3f6fb);
+    color: var(--color-text, #243b68);
+    font-family: var(--font-display, "Fredoka", sans-serif);
+    font-size: 16px;
+    font-weight: 700;
     box-sizing: border-box;
+    cursor: pointer;
+    box-shadow: 0 3px 0 var(--color-outline, #243b68);
+    transition: background-color 0.15s ease,
+                color 0.15s ease,
+                transform 0.15s ease,
+                box-shadow 0.15s ease;
+}
+
+.lobby-actions button:hover {
+    background: var(--color-panel-hover, #e8eef8);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 0 var(--color-outline, #243b68);
+}
+
+.lobby-actions button:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 var(--color-outline, #243b68);
 }
 
 .lobby-actions #start {
     width: 100%;
+    background: var(--color-primary, #35c759);
+    color: #ffffff;
+}
+
+.lobby-actions #start:hover {
+    background: var(--color-primary-hover, #27ad49);
 }
 
 .lobby-actions #invite {
     width: 100%;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 760px) {
+    .lobby-settings {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .settings-scroll {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 6px;
+    }
+
+    .settings-scroll label {
+        min-height: auto;
+        padding-top: 4px;
+    }
+
+    .settings-scroll select {
+        height: 40px;
+    }
+
+    .custom-word-header {
+        align-items: flex-start;
+    }
+
+    .custom-word-header > label {
+        justify-content: flex-start;
+    }
+
+    .custom-words textarea {
+        min-height: 100px;
+    }
+
+    .lobby-actions {
+        grid-template-columns: minmax(0, 1fr) 100px;
+    }
 }

@@ -30,15 +30,18 @@ function Leaderboard({ players = [] }) {
       </div>
 
       <div className="leaderboard-rest">
-        {players.slice(3).map((player, index) => (
-  <div key={player.pid} className="mini-player">
-    <div className="avatar-placeholder small">Avatar</div>
-    <strong>#{player.position ?? index + 4}</strong>
-    <span>{player.name}</span>
-    <small>{player.points} pts</small>
-  </div>
-))}
-      </div>
+  {players.slice(3).map((player, index) => (
+    <div
+      key={player.id ?? player.pid ?? `player-${index + 4}`}
+      className="mini-player"
+    >
+      <div className="avatar-placeholder small">Avatar</div>
+      <strong>#{player.position ?? index + 4}</strong>
+      <span>{player.name}</span>
+      <small>{player.points ?? 0} pts</small>
+    </div>
+  ))}
+</div>
     </div>
   );
 }

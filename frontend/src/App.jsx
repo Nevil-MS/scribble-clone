@@ -17,44 +17,27 @@ function App() {
             });
 
             if (!response.ok) {
-                throw new Error(
-                    "Failed to create room"
-                );
+                throw new Error("Failed to create room");
             }
 
             const data = await response.json();
 
-            console.log(
-                "Room created:",
-                data.room_id
-            );
+            console.log("Room created:", data.room_id);
 
             setPlayerName(name);
             setRoomId(data.room_id);
             setPlayerPid(data.pid);
             setPage("lobby");
         } catch (error) {
-            console.error(
-                "Room creation failed:",
-                error
-            );
+            console.error("Room creation failed:", error);
 
-            alert(
-                "Could not create room. Is the backend running?"
-            );
+            alert("Could not create room. Is the backend running?");
         }
     }
 
     function handleGameStart(settings, pid) {
-        console.log(
-            "Backend confirmed game start:",
-            settings
-        );
-
-        console.log(
-            "Player PID:",
-            pid
-        );
+        console.log("Backend confirmed game start:", settings);
+        console.log("Player PID:", pid);
 
         setGameSettings(settings);
         setPlayerPid(pid);

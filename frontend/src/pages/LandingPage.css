@@ -1,87 +1,218 @@
+
+/* ========================================
+   LANDING PAGE
+   ======================================== */
+
 .player-setup {
-    background-color: #d9d9d9;
+  background-color: var(--color-panel);
 
-    width: 520px;
-    padding: 16px;
+  width: min(520px, calc(100vw - 32px));
+  padding: 18px;
 
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 
-    gap: 10px;
+  box-sizing: border-box;
+  margin: 0 auto;
 
-    box-sizing: border-box;
-    margin: 0 auto;
+  border: var(--border-heavy) solid var(--color-outline);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
 }
 
+/* Name and language row */
+
 .name-lang {
-    display: flex;
-    width: 100%;
-    gap: 10px;
+  display: flex;
+  width: 100%;
+  gap: 10px;
 }
 
 .name-lang input {
-    flex: 1;
+  flex: 1;
+  min-width: 0;
+  height: 44px;
 
-    height: 42px;
+  padding: 8px 12px;
 
-    padding: 8px 10px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
 
-    font-size: 15px;
+  color: var(--color-text);
+  background-color: #ffffff;
 
-    box-sizing: border-box;
+  border: var(--border-width) solid var(--color-outline);
+  border-radius: var(--radius-sm);
+
+  box-sizing: border-box;
+  outline-offset: 2px;
+}
+
+.name-lang input::placeholder {
+  color: var(--color-text-muted);
+  font-weight: 600;
 }
 
 .name-lang select {
-    width: 120px;
+  width: 120px;
+  height: 44px;
+  padding: 0 8px;
 
-    height: 42px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 800;
 
-    font-size: 15px;
+  color: var(--color-text);
+  background-color: #ffffff;
 
-    box-sizing: border-box;
+  border: var(--border-width) solid var(--color-outline);
+  border-radius: var(--radius-sm);
+
+  box-sizing: border-box;
+  cursor: pointer;
 }
 
+
+/* Avatar selection area */
 .avatar-setup {
-    background-color: #a3a3a3;
+  background-color: var(--color-panel-muted);
 
-    width: 100%;
-    min-height: 210px;
+  width: 100%;
+  min-height: 210px;
+  padding: 12px;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
 
-    gap: 18px;
+  box-sizing: border-box;
 
-    padding: 12px;
-
-    box-sizing: border-box;
+  border: var(--border-width) solid var(--color-outline-light);
+  border-radius: var(--radius-md);
 }
 
-.avatar-placeholder {
-    width: 100px;
-    height: 100px;
-
-    border: 2px solid #555;
-    border-radius: 50%;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    box-sizing: border-box;
-}
-
+/* Previous and next avatar controls */
 .avatar-setup button {
-    width: 50px;
-    height: 48px;
+  width: 50px;
+  height: 44px;
+  flex-shrink: 0;
+
+  font-family: var(--font-body);
+  font-weight: 800;
+  color: var(--color-text);
+
+  background-color: #ffffff;
+
+  border: var(--border-width) solid var(--color-outline);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 3px 0 var(--color-outline);
 }
+
+.avatar-setup button:hover {
+  background-color: var(--color-panel-hover);
+}
+
+.avatar-setup button:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--color-outline);
+}
+
+/* Existing avatar placeholder */
+.avatar-placeholder {
+  width: 76px;
+  height: 76px;
+  flex-shrink: 0;
+
+  border: var(--border-heavy) solid var(--color-outline);
+  border-radius: 50%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  box-sizing: border-box;
+
+  background-color: #ffffff;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+/* Main play action */
 
 .play-btn {
-    width: 100%;
-    height: 48px;
+  width: 100%;
+  min-height: 52px;
 
-    font-size: 20px;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  color: #ffffff;
 
-    box-sizing: border-box;
+  background-color: var(--color-primary);
+
+  border: var(--border-heavy) solid var(--color-outline);
+  border-radius: var(--radius-md);
+  box-shadow: 0 5px 0 var(--color-outline);
+
+  box-sizing: border-box;
+
+  transition:
+    background-color 120ms ease,
+    transform 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.play-btn:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.play-btn:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 var(--color-outline);
+}
+
+/* Small-screen adjustments */
+
+@media (max-width: 480px) {
+  .player-setup {
+    padding: 12px;
+  }
+
+  .name-lang {
+    gap: 8px;
+  }
+
+  .name-lang select {
+    width: 105px;
+  }
+}
+
+/* Game title */
+
+main > h1 {
+  margin: 0 0 16px;
+  padding: 0;
+
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 54px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0;
+
+  color: #ffffff;
+  text-align: center;
+
+  /* Clean, subtle cartoon shadow */
+  text-shadow: 0 3px 0 rgba(8, 41, 95, 0.8);
+}
+
+@media (max-width: 480px) {
+  main > h1 {
+    font-size: 38px;
+  }
 }

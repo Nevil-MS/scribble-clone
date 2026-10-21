@@ -1,62 +1,200 @@
+/* ========================================
+   LOBBY PAGE LAYOUT
+   ======================================== */
+
 .lobby-page {
     display: grid;
-
     grid-template-areas:
         "title title title"
         "bar bar bar"
         "player settings chat";
 
-    grid-template-columns: 220px minmax(0, 1fr) 230px;
-    grid-template-rows: auto 54px auto;
+    grid-template-columns:
+        220px
+        minmax(0, 1fr)
+        230px;
+
+    grid-template-rows: auto 54px minmax(0, 1fr);
 
     width: min(1300px, calc(100% - 40px));
     min-height: 0;
 
-    gap: 12px;
+    gap: 16px;
     padding: 20px;
 
     box-sizing: border-box;
     margin: 0 auto;
 }
 
-/* Title */
+/* ---------- Game Title ---------- */
 
 .lobby-page > h1 {
     grid-area: title;
-
     margin: 0;
+    padding: 4px 0;
+
+    font-family: var(--font-display, "Fredoka", sans-serif);
+    font-size: clamp(30px, 3vw, 42px);
+    font-weight: 700;
+    line-height: 1.2;
+
+    color: #ffffff;
     text-align: left;
+    text-shadow: 0 3px 0 rgba(8, 41, 95, 0.8);
 }
 
-/* Status bar */
+/* ---------- Game Status Bar ---------- */
 
 .lobby-page > .game-status-bar {
     grid-area: bar;
     width: 100%;
+    min-width: 0;
+    align-self: stretch;
 }
 
-/* Player list */
+/* ---------- Player List ---------- */
 
 .lobby-page > .player-list {
     grid-area: player;
-
-    width: 220px;
+    width: 100%;
+    min-width: 0;
+    align-self: start;
 }
 
-/* Settings */
+/* ---------- Lobby Settings ---------- */
 
 .lobby-page > .lobby-settings {
     grid-area: settings;
     width: 100%;
     min-width: 0;
     height: auto;
+    align-self: start;
 }
+
+/* ---------- Chat ---------- */
 
 .lobby-page > .chat {
     grid-area: chat;
     width: 100%;
     min-width: 0;
-    height: calc(100% - 80px);
+    height: auto;
     align-self: start;
     box-sizing: border-box;
+}
+
+/* ---------- Medium Screens ---------- */
+
+@media (max-width: 1000px) {
+    .lobby-page {
+        grid-template-columns:
+            190px
+            minmax(0, 1fr)
+            210px;
+
+        gap: 12px;
+        padding: 16px;
+        width: calc(100% - 24px);
+    }
+}
+
+/* ---------- Narrow Screens ---------- */
+
+@media (max-width: 760px) {
+    .lobby-page {
+        grid-template-areas:
+            "title"
+            "bar"
+            "player"
+            "settings"
+            "chat";
+
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto;
+
+        width: 100%;
+        padding: 12px;
+        gap: 14px;
+    }
+
+    .lobby-page > h1 {
+        text-align: center;
+    }
+
+    .lobby-page > .player-list,
+    .lobby-page > .lobby-settings,
+    .lobby-page > .chat {
+        width: 100%;
+    }
+}
+/* ---------- Lobby Chat: Match Game Page ---------- */
+
+.lobby-page > .chat {
+    grid-area: chat;
+    width: 100%;
+    min-width: 0;
+    height: 440px;
+    min-height: 440px;
+    align-self: stretch;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+}
+
+/* Let messages fill the available chat space */
+.lobby-page > .chat .chat-messages {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+/* Keep the message input aligned to the bottom */
+.lobby-page > .chat input {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+/* Responsive height on smaller screens */
+@media (max-width: 760px) {
+    .lobby-page > .chat {
+        height: 360px;
+        min-height: 360px;
+    }
+}
+
+/* ---------- Fine-tune Lobby Chat Alignment ---------- */
+
+.lobby-page > .chat {
+    height: 440px;
+    min-height: 440px;
+    align-self: start;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 12px;
+    overflow: hidden;
+}
+
+.lobby-page > .chat .chat-messages {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    flex: 1 1 auto;
+    min-height: 0;
+    gap: 8px;
+    overflow-y: auto;
+}
+
+.lobby-page > .chat input {
+    margin-top: 10px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 760px) {
+    .lobby-page > .chat {
+        height: 360px;
+        min-height: 360px;
+    }
 }

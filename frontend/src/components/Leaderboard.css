@@ -3,8 +3,6 @@
     inset: 0;
     z-index: 10;
 
-    color: white;
-
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -12,108 +10,298 @@
 
     padding: 24px;
     box-sizing: border-box;
+    overflow-y: auto;
+
+    background: rgba(8, 41, 95, 0.82);
+    backdrop-filter: blur(3px);
+
+    color: var(--color-text, #243b68);
+    font-family: var(--font-body, "Nunito", sans-serif);
 }
+
+/* ---------- Winner Heading ---------- */
 
 .leaderboard h1 {
+    width: 100%;
     margin: 0 0 28px;
-    font-size: 34px;
+
+    color: #ffffff;
+    font-family: var(--font-display, "Fredoka", sans-serif);
+    font-size: clamp(26px, 3vw, 38px);
+    font-weight: 700;
+    line-height: 1.25;
     text-align: center;
+    overflow-wrap: anywhere;
+
+    text-shadow: 0 3px 0 rgba(8, 41, 95, 0.8);
 }
 
-/* ---------- Top 3 ---------- */
+/* ---------- Top Three Podium ---------- */
 
 .podium {
     display: flex;
     align-items: flex-end;
     justify-content: center;
 
-    gap: 22px;
-
-    margin-bottom: 36px;
-
+    gap: 16px;
     width: 100%;
+    margin-bottom: 28px;
 }
 
 .podium-card {
-    width: 150px;
-
-    border: 2px solid white;
-
-    padding: 12px;
-
-    box-sizing: border-box;
-
     display: flex;
     flex-direction: column;
-
     align-items: center;
+    justify-content: flex-start;
+
+    width: 160px;
+    min-width: 0;
+    padding: 14px 10px 16px;
+
+    box-sizing: border-box;
+    overflow: visible;
+    text-align: center;
+    overflow-wrap: anywhere;
+
+    background: #ffffff;
+    border: 2px solid var(--color-outline, #243b68);
+    border-radius: 12px;
+    box-shadow: 0 5px 0 var(--color-bg-dark, #08295f);
+}
+
+.podium-card.second {
+    min-height: 190px;
+    height: auto;
+}
+
+.podium-card.first {
+    min-height: 220px;
+    height: auto;
+
+    background: #fff8d9;
+    border-color: #e3b52e;
+}
+
+.podium-card.third {
+    min-height: 175px;
+    height: auto;
+}
+
+/* ---------- Podium Avatars ---------- */
+
+.podium-card .avatar-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 62px;
+    height: 62px;
+    flex-shrink: 0;
+    margin-bottom: 10px;
+
+    border: 3px solid var(--color-outline, #243b68);
+    border-radius: 50%;
+    background: #e8eef8;
+
+    color: var(--color-text, #243b68);
+    font-family: var(--font-display, "Fredoka", sans-serif);
+    font-size: 12px;
+    font-weight: 700;
     text-align: center;
 }
 
-.first {
-    height: 200px;
+/* ---------- Rank ---------- */
+
+.podium-card h2 {
+    margin: 0 0 6px;
+
+    color: var(--color-text, #243b68);
+    font-family: var(--font-display, "Fredoka", sans-serif);
+    font-size: 23px;
+    font-weight: 700;
+    line-height: 1.2;
 }
 
-.second {
-    height: 170px;
+/* ---------- Player Names ---------- */
+
+.podium-card h3 {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+
+    margin: 0 0 7px;
+    padding: 0 2px;
+
+    color: #18345f;
+    font-family: var(--font-body, "Nunito", sans-serif);
+    font-size: 14px;
+    font-weight: 900;
+    line-height: 1.35;
+
+    text-align: center;
+    overflow-wrap: anywhere;
+    word-break: normal;
 }
 
-.third {
-    height: 150px;
-}
+/* ---------- Player Points ---------- */
 
-.podium-card .avatar-placeholder {
-    width: 70px;
-    height: 70px;
-
-    border: 2px solid white;
-
-    margin-bottom: 10px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 12px;
-}
-
-.podium-card h2,
-.podium-card h3,
 .podium-card p {
-    margin: 4px 0;
+    display: block;
+    width: 100%;
+
+    margin: 0;
+    padding: 2px 0;
+
+    color: #405777;
+    font-family: var(--font-body, "Nunito", sans-serif);
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.4;
+
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: anywhere;
 }
 
-/* ---------- Remaining players ---------- */
+/* ---------- Remaining Players ---------- */
 
 .leaderboard-rest {
     display: flex;
-
     justify-content: center;
-    align-items: flex-start;
+    align-items: stretch;
+    flex-wrap: wrap;
 
-    gap: 28px;
-
+    gap: 12px;
     width: 100%;
 }
 
 .mini-player {
-    width: 90px;
-
     display: flex;
     flex-direction: column;
-
     align-items: center;
+    justify-content: flex-start;
+
+    width: 100px;
+    min-width: 0;
+    padding: 10px 8px 12px;
+
+    box-sizing: border-box;
     text-align: center;
+    overflow-wrap: anywhere;
+
+    background: #ffffff;
+    border: 2px solid var(--color-outline, #243b68);
+    border-radius: 10px;
+    box-shadow: 0 3px 0 var(--color-bg-dark, #08295f);
+
+    color: var(--color-text, #243b68);
 }
 
 .mini-player .avatar-placeholder.small {
-    width: 50px;
-    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
     margin-bottom: 8px;
+
+    border: 2px solid var(--color-outline, #243b68);
+    border-radius: 50%;
+    background: #e8eef8;
+
+    color: var(--color-text, #243b68);
+    font-size: 10px;
+    font-weight: 800;
 }
 
-.mini-player span,
+.mini-player strong {
+    color: #18345f;
+    font-family: var(--font-display, "Fredoka", sans-serif);
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.mini-player span {
+    max-width: 100%;
+    margin-top: 4px;
+
+    color: #18345f;
+    font-size: 13px;
+    font-weight: 900;
+    line-height: 1.35;
+
+    overflow-wrap: anywhere;
+}
+
 .mini-player small {
-    margin-top: 2px;
+    margin-top: 5px;
+
+    color: #405777;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.4;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 600px) {
+    .leaderboard {
+        justify-content: flex-start;
+        padding: 18px 10px 24px;
+    }
+
+    .leaderboard h1 {
+        margin-bottom: 22px;
+        font-size: 27px;
+    }
+
+    .podium {
+        gap: 8px;
+        margin-bottom: 22px;
+    }
+
+    .podium-card {
+        width: calc((100% - 16px) / 3);
+        padding: 10px 5px 12px;
+    }
+
+    .podium-card.second {
+        min-height: 165px;
+    }
+
+    .podium-card.first {
+        min-height: 190px;
+    }
+
+    .podium-card.third {
+        min-height: 150px;
+    }
+
+    .podium-card .avatar-placeholder {
+        width: 44px;
+        height: 44px;
+        font-size: 10px;
+    }
+
+    .podium-card h2 {
+        font-size: 19px;
+    }
+
+    .podium-card h3 {
+        font-size: 12px;
+    }
+
+    .podium-card p {
+        font-size: 12px;
+    }
+
+    .leaderboard-rest {
+        gap: 8px;
+    }
+
+    .mini-player {
+        width: 85px;
+    }
 }

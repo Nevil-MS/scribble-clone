@@ -7,7 +7,13 @@ import LobbySettings from "../components/LobbySettings";
 import PlayerList from "../components/PlayerList";
 import "./LobbyPage.css";
 
-function LobbyPage({ roomId, playerName, pid, onGameStart }) {
+
+function LobbyPage({
+    roomId,
+    playerName,
+    pid,
+    onGameStart
+}) {
     const [players, setPlayers] = useState([]);
     const [messages, setMessages] = useState([]);
     const pidRef = useRef(null);
@@ -15,6 +21,7 @@ function LobbyPage({ roomId, playerName, pid, onGameStart }) {
     const pendingSettingsRef = useRef(null);
 
     useEffect(() => {
+
         if (!roomId) {
             return;
         }
@@ -231,14 +238,12 @@ function handleSendMessage(text) {
 
                 <PlayerList players={players} />
 
-                <LobbySettings
-                    onStart={handleStart}
-                />
+                <LobbySettings onStart={handleStart} />
 
                 <Chat
-                    messages={messages}
-                    onSendMessage={handleSendMessage}
-                />
+    messages={messages}
+    onSendMessage={handleSendMessage}
+/>
             </div>
         </main>
     );

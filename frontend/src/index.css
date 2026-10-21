@@ -1,9 +1,183 @@
+
+/* ========================================
+   SKRIBBL-INSPIRED DESIGN SYSTEM
+   ======================================== */
+
+:root {
+  /* Background */
+  --color-bg: #0d3a82;
+  --color-bg-dark: #08295f;
+  --color-bg-light: #164b9a;
+
+  /* Surfaces */
+  --color-panel: #ffffff;
+  --color-panel-muted: #f3f6fb;
+  --color-panel-hover: #e8eef8;
+
+  /* Borders */
+  --color-outline: #243b68;
+  --color-outline-light: #d6dfed;
+
+  /* Text */
+  --color-text: #243b68;
+  --color-text-muted: #64748b;
+  --color-text-light: #ffffff;
+
+  /* Actions */
+  --color-primary: #35c759;
+  --color-primary-hover: #27ad49;
+  --color-primary-dark: #168638;
+
+  --color-danger: #f04452;
+  --color-warning: #ffc857;
+  --color-info: #3b82f6;
+
+  /* Rounded shapes */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /* Outlines and shadows */
+  --border-width: 2px;
+  --border-heavy: 3px;
+
+  --shadow-sm: 0 3px 0 var(--color-outline);
+  --shadow-md: 0 5px 0 var(--color-outline);
+  --shadow-lg: 0 7px 0 var(--color-outline);
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  /* Fonts */
+  --font-body: "Nunito", sans-serif;
+  --font-display: "Fredoka", sans-serif;
+
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Predictable element sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  min-height: 100%;
+}
+
+body {
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.45;
+
+  color: var(--color-text);
+  background-color: var(--color-bg);
+
+
+background-image: radial-gradient(
+  circle,
+  rgba(255, 255, 255, 0.22) 2px,
+  transparent 2.5px
+);
+
+background-size: 24px 24px;
+background-attachment: fixed;
+
+}
+
+}
+
+/* Preserve your existing main layout */
 main {
-    min-height: 100vh;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 
-    display: flex;
-    flex-direction: column;
+/* Consistent typography */
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
 
-    align-items: center;
-    justify-content: center;
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+input,
+select,
+textarea {
+  color: inherit;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+p {
+  margin-top: 0;
+}
+
+/* Keyboard accessibility */
+:focus-visible {
+  outline: 3px solid var(--color-info);
+  outline-offset: 3px;
+}
+
+/* Temporary verification: visible game background */
+body {
+  background-color: #0d3a82;
+  background-image: radial-gradient(
+    circle,
+    #3865a5 3px,
+    transparent 3.5px
+  );
+  background-size: 26px 26px;
+  background-attachment: fixed;
 }

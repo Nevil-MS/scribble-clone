@@ -159,6 +159,7 @@ function GamePage({ playerName, roomId, pid }) {
    * WebSocket connection
    */
   useEffect(() => {
+
     if (!roomId) {
       return;
     }
@@ -516,9 +517,9 @@ function GamePage({ playerName, roomId, pid }) {
           </div>
 
           <Chat
-            messages={messages}
-            onSendMessage={handleSendMessage}
-          />
+  messages={messages}
+  onSendMessage={handleSendMessage}
+/>
 
         </div>
       </div>

@@ -1,35 +1,102 @@
-.chat {
+/* ---------- Chat Panel ---------- */
 
-    background-color: #d9d9d9;
+.chat {
+    background: #ffffff;
+    color: var(--color-text, #243b68);
 
     display: flex;
     flex-direction: column;
+    gap: 8px;
 
-    gap: 4px;
-    padding: 8px;
-
+    padding: 10px;
     width: 100%;
     min-width: 0;
+    min-height: 0;
+
+    border: 2px solid var(--color-outline, #243b68);
+    border-radius: 10px;
+    box-shadow: 0 4px 0 var(--color-bg-dark, #08295f);
 
     box-sizing: border-box;
     align-self: stretch;
 }
 
+/* ---------- Message Area ---------- */
+
 .chat-message {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    padding: 4px;
+    gap: 8px;
 
     flex: 1;
     min-height: 0;
+    min-width: 0;
 
+    padding: 4px;
     justify-content: flex-end;
+
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+    font-family: var(--font-body, "Nunito", sans-serif);
+    font-size: 14px;
+    line-height: 1.45;
 }
+
+/* Individual messages, if rendered as separate elements */
+
+.chat-message > * {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+
+/* ---------- Chat Input ---------- */
 
 .chat input {
     width: 100%;
-    min-height: 30px;
+    min-width: 0;
+    min-height: 38px;
 
+    padding: 8px 10px;
     box-sizing: border-box;
+
+    border: 2px solid var(--color-outline-light, #d6dfed);
+    border-radius: 7px;
+
+    background: var(--color-panel-muted, #f3f6fb);
+    color: var(--color-text, #243b68);
+
+    font-family: var(--font-body, "Nunito", sans-serif);
+    font-size: 14px;
+
+    outline: none;
+    transition: border-color 0.15s ease,
+                background-color 0.15s ease,
+                box-shadow 0.15s ease;
+}
+
+.chat input::placeholder {
+    color: var(--color-text-muted, #64748b);
+}
+
+.chat input:focus {
+    background: #ffffff;
+    border-color: var(--color-outline, #243b68);
+    box-shadow: 0 0 0 3px rgba(36, 59, 104, 0.12);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 760px) {
+    .chat {
+        min-height: 260px;
+        padding: 10px;
+    }
+
+    .chat-message {
+        font-size: 14px;
+    }
+
+    .chat input {
+        min-height: 42px;
+    }
 }
